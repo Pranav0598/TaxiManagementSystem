@@ -24,6 +24,24 @@ namespace TaxiManagementSystem.Controllers
             return View(await _context.Users.ToListAsync());
         }
 
+        [HttpGet]
+        public ActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Login(LoginViewModel loginViewModel)
+        {
+            Users user = _context.Users.Where(e => e.UserName == loginViewModel.UserName && e.Password == loginViewModel.Password).FirstOrDefault();
+            loginViewModel.UserId = user == null ? -1 : user.UserId;
+            if (loginViewModel.UserId == -1)
+                return View(loginViewModel);
+            else
+                return RedirectToAction("Index", "Home");
+        }
+
         // GET: Users/Details/5
         public async Task<IActionResult> Details(int? id)
         {

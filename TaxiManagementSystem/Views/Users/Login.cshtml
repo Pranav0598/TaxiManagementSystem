@@ -1,0 +1,51 @@
+﻿@model TaxiManagementSystem.Models.LoginViewModel
+
+
+@{
+    bool invalidLogin = Model?.UserId == -1 ;
+    ViewData["Title"] = "Home Page";
+}
+
+
+<div class="jumbotron text-center">
+    <h1>Taxi Management System</h1>
+    <p>Welcome to the taxi management system.</p>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-6">
+            <h3>Sign In</h3>
+          
+            <form asp-controller="Users" asp-action="Login" id="login">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="UserName" class="control-label"></label>
+                    <input asp-for="UserName" class="form-control" required />
+                    <span asp-validation-for="UserName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Password" class="control-label"></label>
+                    <input asp-for="Password" class="form-control "  required/>
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                @if (invalidLogin)
+                {
+                    <div class="text-danger">Invalid login. Try again!</div>
+                }
+                <div class="form-group">
+                    <input type="submit" value="Login" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+        <div class="col-sm-6">
+            <h3> Or</h3>
+            <button type="button" class="btn btn-primary btn-lg">Register</button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

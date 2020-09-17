@@ -1,0 +1,26 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace TaxiManagementSystem.Models
+{
+    public class RegistrationViewModel
+    {
+        public int UserId { get; set; }
+        [Required]
+        public string UserName { get; set; }
+        [Required]
+        public string LastName { get; set; }
+        [Required]
+        public string FirstName { get; set; }
+        public int? Age { get; set; }
+        [Required]
+        [DataType(DataType.EmailAddress)]
+        public string Email { get; set; }
+        [RegularExpression(@"^.*(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*\(\)_\-+=]).*$", ErrorMessage = "Password needs to have a captial letter, a number and a symbol")]
+        [StringLength(20, MinimumLength = 9, ErrorMessage = "Password is short")]
+        public string Password { get; set; }
+    }
+}
