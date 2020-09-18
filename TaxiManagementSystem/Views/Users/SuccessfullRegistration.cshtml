@@ -1,0 +1,27 @@
+﻿@model TaxiManagementSystem.Models.RegistrationViewModel
+
+
+@{
+    bool invalidLogin = Model?.UserId == -1;
+    ViewData["Title"] = "Home Page";
+}
+
+
+<div class="jumbotron text-center">
+    <h1>Taxi Management System</h1>
+    <p>Welcome to the taxi management system.</p>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-8">
+            <h3> Successfull Registrarion</h3>
+            <p>You have been sucessfully registered. Please proceed to  @Html.ActionLink("Login", "Login", "Users", new { @class = "btn btn-primary" })</p>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

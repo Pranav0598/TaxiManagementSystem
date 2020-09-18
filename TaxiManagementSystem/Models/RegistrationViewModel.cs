@@ -21,6 +21,13 @@ namespace TaxiManagementSystem.Models
         public string Email { get; set; }
         [RegularExpression(@"^.*(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*\(\)_\-+=]).*$", ErrorMessage = "Password needs to have a captial letter, a number and a symbol")]
         [StringLength(20, MinimumLength = 9, ErrorMessage = "Password is short")]
+        [DataType(DataType.Password)]
         public string Password { get; set; }
+
+        [RegularExpression(@"^.*(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*\(\)_\-+=]).*$", ErrorMessage = "Password needs to have a captial letter, a number and a symbol")]
+        [StringLength(20, MinimumLength = 9, ErrorMessage = "Password is short")]
+        [Compare("Password")]
+        [DataType(DataType.Password)]
+        public string ConfirmPassword { get; set; }
     }
 }

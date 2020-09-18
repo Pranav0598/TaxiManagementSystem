@@ -1,17 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Security;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
+using DocumentFormat.OpenXml.Office.CustomXsn;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TaxiManagementSystem.Models;
+using TaxiManagementSystem.Security;
 
 namespace TaxiManagementSystem.Controllers
 {
     public class UsersController : Controller
     {
-        private readonly TaxiManagementSystemContext _context;
+        private readonly TaxiManagementSystemContext _context;       
 
         public UsersController(TaxiManagementSystemContext context)
         {
@@ -34,12 +39,82 @@ namespace TaxiManagementSystem.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Login(LoginViewModel loginViewModel)
         {
-            Users user = _context.Users.Where(e => e.UserName == loginViewModel.UserName && e.Password == loginViewModel.Password).FirstOrDefault();
-            loginViewModel.UserId = user == null ? -1 : user.UserId;
+            if (loginViewModel.UserName == null || loginViewModel.Password == null)
+            {
+                loginViewModel.UserId = -1;
+                return View(loginViewModel);
+            }            
+            Users user = _context.Users.Where(e => e.UserName == loginViewModel.UserName).FirstOrDefault();
+            if (user != null && !string.IsNullOrEmpty(user.Password))
+            {
+                string decryptedPassword = Encryption.Decrypt(user.Password);
+                loginViewModel.UserId = decryptedPassword == loginViewModel.Password ? user.UserId : -1;
+            }
+            else 
+            {
+                loginViewModel.UserId = -1;
+            }
+
             if (loginViewModel.UserId == -1)
                 return View(loginViewModel);
             else
                 return RedirectToAction("Index", "Home");
+        }
+
+
+        [HttpGet]
+        public ActionResult Registration()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> RegistrationAsync(RegistrationViewModel registrationViewModel)
+        {
+            registrationViewModel = validateRegistration(registrationViewModel);
+            if (registrationViewModel.UserId == -1)
+                return View(registrationViewModel);
+
+            Users user = MapRegistrationModelToUser(registrationViewModel);
+
+            if (ModelState.IsValid)
+            {
+                _context.Add(user);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("SuccessfullRegistration", "Users");
+            }
+
+            return View(registrationViewModel);
+          
+               
+        }
+
+       
+
+        public Users MapRegistrationModelToUser(RegistrationViewModel registrationViewModel) 
+        {
+            Users user = new Users();
+            user.UserName = registrationViewModel.UserName;
+            user.FirstName = registrationViewModel.FirstName;
+            user.LastName = registrationViewModel.LastName;
+            user.Email = registrationViewModel.Email;
+            user.Age = registrationViewModel.Age;
+            user.Password = Encryption.Encrypt(registrationViewModel.Password);
+            return user;
+        }
+
+        public RegistrationViewModel validateRegistration(RegistrationViewModel registrationViewModel) 
+        {
+            Users user = _context.Users.Where(e => e.UserName == registrationViewModel.UserName).FirstOrDefault();
+            registrationViewModel.UserId = user?.UserId ?? 0;
+            return registrationViewModel;
+        }
+
+        [HttpGet]
+        public ActionResult SuccessfullRegistration()
+        {
+            return View();
         }
 
         // GET: Users/Details/5
