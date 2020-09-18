@@ -15,10 +15,36 @@ namespace TaxiManagementSystem.Models
         {
         }
 
+        public virtual DbSet<Driver> Driver { get; set; }
         public virtual DbSet<Users> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Driver>(entity =>
+            {
+                entity.HasKey(e => e.DriverId)
+                    .HasName("PK__Driver__F1B1CD04A76BD14F");
+
+                entity.Property(e => e.DriversLicense)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Email)
+                    .IsRequired()
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FirstName)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.LastName)
+                    .IsRequired()
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+            });
+
             modelBuilder.Entity<Users>(entity =>
             {
                 entity.HasKey(e => e.UserId)

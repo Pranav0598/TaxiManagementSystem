@@ -6,6 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using DocumentFormat.OpenXml.Office.CustomXsn;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -58,7 +59,11 @@ namespace TaxiManagementSystem.Controllers
             if (loginViewModel.UserId == -1)
                 return View(loginViewModel);
             else
+            {
+                HttpContext.Session.SetString("CurrentUserId", loginViewModel.UserId.ToString());
+                HttpContext.Session.SetString("CurrentUserName", loginViewModel.UserName.ToString());               
                 return RedirectToAction("Index", "Home");
+            }
         }
 
 
@@ -116,6 +121,15 @@ namespace TaxiManagementSystem.Controllers
         {
             return View();
         }
+
+        [HttpGet]
+        public ActionResult Logout()
+        {
+            HttpContext.Session.Remove("CurrentUserId");
+            HttpContext.Session.Remove("CurrentUserName");
+            return View();
+        }
+
 
         // GET: Users/Details/5
         public async Task<IActionResult> Details(int? id)

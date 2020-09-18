@@ -1,0 +1,18 @@
+﻿
+@{
+    bool invalidLogin = Model?.UserId == -1;
+    ViewData["Title"] = "Home Page";
+    Layout = "~/Views/Shared/_publicLayout.cshtml";
+}
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-8">
+            <h3> Successfull Registrarion</h3>
+            <p>You have logged out.  </p>
+            <p>Please click  @Html.ActionLink("Login", "Login", "Users", new { @class = "btn btn-primary inline" })  to sign back in</p>
+        </div>
+    </div>
+</div>
+

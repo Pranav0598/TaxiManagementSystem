@@ -2,21 +2,19 @@
 
 
 @{
-    bool invalidLogin = Model?.UserId == -1 ;
+    bool invalidLogin = Model?.UserId == -1;
     ViewData["Title"] = "Home Page";
+    Layout = "~/Views/Shared/_publicLayout.cshtml";
 }
 
 
-<div class="jumbotron text-center">
-    <h1>Taxi Management System</h1>
-    <p>Welcome to the taxi management system.</p>
-</div>
+
 
 <div class="container">
     <div class="row">
         <div class="col-sm-6">
             <h3>Sign In</h3>
-          
+
             <form asp-controller="Users" asp-action="Login" id="login">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="form-group">
@@ -26,7 +24,7 @@
                 </div>
                 <div class="form-group">
                     <label asp-for="Password" class="control-label"></label>
-                    <input asp-for="Password" class="form-control "  required/>
+                    <input asp-for="Password" class="form-control " required />
                     <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
                 @if (invalidLogin)
@@ -42,7 +40,7 @@
             <h3>
                 Or
                 @Html.ActionLink("Register Now", "Registration", "Users", new { @class = "btn btn-primary btn-lg" })
-            </h3> 
+            </h3>
         </div>
     </div>
 </div>

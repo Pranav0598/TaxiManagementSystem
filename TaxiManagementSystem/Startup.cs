@@ -26,6 +26,14 @@ namespace TaxiManagementSystem
         {
             var connection = Configuration.GetConnectionString("TaxiDatabase");
             services.AddDbContext<TaxiManagementSystemContext>(options =>options.UseSqlServer(connection));
+
+            services.AddSession(options =>
+            {
+                options.Cookie.Name = ".TaxiCompany.Session";
+                options.IdleTimeout = TimeSpan.FromSeconds(10);
+                options.Cookie.IsEssential = true;
+            });
+
             services.AddControllersWithViews();
         }
 
@@ -44,7 +52,9 @@ namespace TaxiManagementSystem
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
+            app.UseSession();
 
             app.UseEndpoints(endpoints =>
             {
