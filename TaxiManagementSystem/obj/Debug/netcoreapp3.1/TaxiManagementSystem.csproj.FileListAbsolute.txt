@@ -359,3 +359,5 @@ C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSy
 C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\TaxiManagementSystem.genruntimeconfig.cache
 C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\Razor\Views\Users\Logout.cshtml.g.cs
 C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_publicLayout.cshtml.g.cs
+C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\Razor\Views\Users\ForgotPassword.cshtml.g.cs
+C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\Razor\Views\Home\UpdatePassword.cshtml.g.cs

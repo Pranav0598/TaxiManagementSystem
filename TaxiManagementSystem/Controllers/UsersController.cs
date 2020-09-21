@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Net.Security;
 using System.Security.Cryptography;
 using System.Text;
@@ -10,6 +12,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using TaxiManagementSystem.Models;
 using TaxiManagementSystem.Security;
 
@@ -17,11 +20,14 @@ namespace TaxiManagementSystem.Controllers
 {
     public class UsersController : Controller
     {
-        private readonly TaxiManagementSystemContext _context;       
-
-        public UsersController(TaxiManagementSystemContext context)
+        private readonly TaxiManagementSystemContext _context;
+        private SmtpClient smtpClient;
+        private readonly IConfiguration _config;
+        public UsersController(TaxiManagementSystemContext context, SmtpClient smtpClient, IConfiguration config)
         {
             _context = context;
+            this.smtpClient = smtpClient;
+            _config = config;
         }
 
         // GET: Users
@@ -44,14 +50,14 @@ namespace TaxiManagementSystem.Controllers
             {
                 loginViewModel.UserId = -1;
                 return View(loginViewModel);
-            }            
-            Users user = _context.Users.Where(e => e.UserName == loginViewModel.UserName).FirstOrDefault();
+            }
+            Users user = GetUser(loginViewModel.UserName);
             if (user != null && !string.IsNullOrEmpty(user.Password))
             {
                 string decryptedPassword = Encryption.Decrypt(user.Password);
                 loginViewModel.UserId = decryptedPassword == loginViewModel.Password ? user.UserId : -1;
             }
-            else 
+            else
             {
                 loginViewModel.UserId = -1;
             }
@@ -61,11 +67,14 @@ namespace TaxiManagementSystem.Controllers
             else
             {
                 HttpContext.Session.SetString("CurrentUserId", loginViewModel.UserId.ToString());
-                HttpContext.Session.SetString("CurrentUserName", loginViewModel.UserName.ToString());               
+                HttpContext.Session.SetString("CurrentUserName", loginViewModel.UserName.ToString());
                 return RedirectToAction("Index", "Home");
             }
         }
 
+        public Users GetUser(string username){
+          return  _context.Users.Where(e => e.UserName == username).FirstOrDefault();
+        }
 
         [HttpGet]
         public ActionResult Registration()
@@ -130,127 +139,63 @@ namespace TaxiManagementSystem.Controllers
             return View();
         }
 
-
-        // GET: Users/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var users = await _context.Users
-                .FirstOrDefaultAsync(m => m.UserId == id);
-            if (users == null)
-            {
-                return NotFound();
-            }
-
-            return View(users);
-        }
-
-        // GET: Users/Create
-        public IActionResult Create()
-        {
+        [HttpGet]
+        public ActionResult ForgotPassword()
+        {           
             return View();
         }
 
-        // POST: Users/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UserId,UserName,LastName,FirstName,Age,Email,Password")] Users users)
+        public async Task<IActionResult> ValidateForgotPassword(LoginViewModel loginViewModel)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(users);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(users);
-        }
 
-        // GET: Users/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
-            var users = await _context.Users.FindAsync(id);
-            if (users == null)
+            Users user = GetUser(loginViewModel.UserName);
+            if (user != null)
             {
-                return NotFound();
-            }
-            return View(users);
-        }
-
-        // POST: Users/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UserId,UserName,LastName,FirstName,Age,Email,Password")] Users users)
-        {
-            if (id != users.UserId)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
+                string pwd = GeneratePwd();
+                using (MailMessage mail = new MailMessage())
                 {
-                    _context.Update(users);
-                    await _context.SaveChangesAsync();
+                    mail.From = new MailAddress("pranavsai0507@gmail.com");
+                    mail.To.Add(user.Email);
+                    mail.Subject = "Password renewal";
+                    mail.Body = "<h1>Pasword Renewal</h1><p>Your new password is <b>"+pwd+"</b></p><p>Please login using this password and reset on login.</p>";
+                    mail.IsBodyHtml = true;
+
+                    using (SmtpClient smtp = new SmtpClient(_config.GetValue<string>("Email:Smtp:Username"), Convert.ToInt32(_config.GetValue<string>("Email:Smtp:Port"))))
+                    {
+                        smtp.UseDefaultCredentials = true;
+                        smtp.Credentials = new NetworkCredential(_config.GetValue<string>("Email:Smtp:Username"), _config.GetValue<string>("Email:Smtp:Password"));
+                        smtp.EnableSsl = true;
+                        smtp.Send(mail);
+                    }
+
+                    user.Password =  Encryption.Encrypt(pwd);
+                    _context.Update(user);
+                    await _context.SaveChangesAsync();                    
                 }
-                catch (DbUpdateConcurrencyException)
+            }
+
+            return RedirectToAction("Login", "Users");
+        }
+
+
+        public string GeneratePwd() 
+        {
+           
+                StringBuilder builder = new StringBuilder();
+                Random random = new Random();
+                char ch;
+                for (int i = 0; i < 8; i++)
                 {
-                    if (!UsersExists(users.UserId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(users);
+                    ch = Convert.ToChar(Convert.ToInt32(Math.Floor(26 * random.NextDouble() + 65)));
+                    builder.Append(ch);
+                }               
+                    return builder.ToString().ToUpper();
+               
+            
         }
-
-        // GET: Users/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var users = await _context.Users
-                .FirstOrDefaultAsync(m => m.UserId == id);
-            if (users == null)
-            {
-                return NotFound();
-            }
-
-            return View(users);
-        }
-
-        // POST: Users/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var users = await _context.Users.FindAsync(id);
-            _context.Users.Remove(users);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
         private bool UsersExists(int id)
         {
             return _context.Users.Any(e => e.UserId == id);

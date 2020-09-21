@@ -26,6 +26,7 @@
                     <label asp-for="Password" class="control-label"></label>
                     <input asp-for="Password" class="form-control " required />
                     <span asp-validation-for="Password" class="text-danger"></span>
+                    @Html.ActionLink("Forgot password", "ForgotPassword", "Users", new { @class = "btn btn-primary" })
                 </div>
                 @if (invalidLogin)
                 {
