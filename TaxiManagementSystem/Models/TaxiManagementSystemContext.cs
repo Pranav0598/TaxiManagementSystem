@@ -17,6 +17,7 @@ namespace TaxiManagementSystem.Models
 
         public virtual DbSet<Driver> Driver { get; set; }
         public virtual DbSet<Users> Users { get; set; }
+        public virtual DbSet<Earnings> Earnings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -44,6 +45,19 @@ namespace TaxiManagementSystem.Models
                     .HasMaxLength(255)
                     .IsUnicode(false);
             });
+
+            modelBuilder.Entity<Earnings>(entity =>
+            {
+                entity.HasKey(e => e.EarningId)
+                    .HasName("PK__Earnings__2418A122638DE9B4");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.Earnings)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Earnings__Income__398D8EEE");
+            });
+
 
             modelBuilder.Entity<Users>(entity =>
             {

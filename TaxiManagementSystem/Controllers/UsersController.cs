@@ -64,6 +64,11 @@ namespace TaxiManagementSystem.Controllers
 
             if (loginViewModel.UserId == -1)
                 return View(loginViewModel);
+            else if (user.IsPasswordReset == true) 
+            {                
+                ResetPasswordViewModel resetPasswordViewModel = new ResetPasswordViewModel() { UserName = user.UserName, UserId = user.UserId};
+                return RedirectToAction("ResetPassword", "Users", resetPasswordViewModel);
+            }
             else
             {
                 HttpContext.Session.SetString("CurrentUserId", loginViewModel.UserId.ToString());
@@ -87,10 +92,10 @@ namespace TaxiManagementSystem.Controllers
         public async Task<ActionResult> RegistrationAsync(RegistrationViewModel registrationViewModel)
         {
             registrationViewModel = validateRegistration(registrationViewModel);
-            if (registrationViewModel.UserId == -1)
+            if (registrationViewModel.UserId != 0)
                 return View(registrationViewModel);
 
-            Users user = MapRegistrationModelToUser(registrationViewModel);
+            Users user = MapRegistrationModelToUser(registrationViewModel);           
 
             if (ModelState.IsValid)
             {
@@ -99,8 +104,7 @@ namespace TaxiManagementSystem.Controllers
                 return RedirectToAction("SuccessfullRegistration", "Users");
             }
 
-            return View(registrationViewModel);
-          
+            return View(registrationViewModel);       
                
         }
 
@@ -120,8 +124,8 @@ namespace TaxiManagementSystem.Controllers
 
         public RegistrationViewModel validateRegistration(RegistrationViewModel registrationViewModel) 
         {
-            Users user = _context.Users.Where(e => e.UserName == registrationViewModel.UserName).FirstOrDefault();
-            registrationViewModel.UserId = user?.UserId ?? 0;
+            Users user = _context.Users.Where(e => e.UserName == registrationViewModel.UserName && e.Email == registrationViewModel.Email).FirstOrDefault();
+            registrationViewModel.UserId = user?.UserId??0;
             return registrationViewModel;
         }
 
@@ -149,8 +153,6 @@ namespace TaxiManagementSystem.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ValidateForgotPassword(LoginViewModel loginViewModel)
         {
-
-
             Users user = GetUser(loginViewModel.UserName);
             if (user != null)
             {
@@ -163,14 +165,14 @@ namespace TaxiManagementSystem.Controllers
                     mail.Body = "<h1>Pasword Renewal</h1><p>Your new password is <b>"+pwd+"</b></p><p>Please login using this password and reset on login.</p>";
                     mail.IsBodyHtml = true;
 
-                    using (SmtpClient smtp = new SmtpClient(_config.GetValue<string>("Email:Smtp:Username"), Convert.ToInt32(_config.GetValue<string>("Email:Smtp:Port"))))
+                    using (SmtpClient smtp = new SmtpClient(_config.GetValue<string>("Email:Smtp:Host"), Convert.ToInt32(_config.GetValue<string>("Email:Smtp:Port"))))
                     {
                         smtp.UseDefaultCredentials = true;
                         smtp.Credentials = new NetworkCredential(_config.GetValue<string>("Email:Smtp:Username"), _config.GetValue<string>("Email:Smtp:Password"));
                         smtp.EnableSsl = true;
                         smtp.Send(mail);
                     }
-
+                    user.IsPasswordReset = true;
                     user.Password =  Encryption.Encrypt(pwd);
                     _context.Update(user);
                     await _context.SaveChangesAsync();                    
@@ -200,5 +202,30 @@ namespace TaxiManagementSystem.Controllers
         {
             return _context.Users.Any(e => e.UserId == id);
         }
-    }
+
+
+        [HttpGet]
+        public ActionResult ResetPassword(ResetPasswordViewModel resetPasswordViewModel)
+        {
+            return View(resetPasswordViewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ValidateResetPassword(ResetPasswordViewModel resetPasswordViewModel)
+        {
+            Users user = GetUser(resetPasswordViewModel.UserName);
+            if (user != null)
+            {
+                user.IsPasswordReset = false;
+                user.Password = Encryption.Encrypt(resetPasswordViewModel.ResetPassword);
+                _context.Update(user);
+                await _context.SaveChangesAsync();
+            }
+            HttpContext.Session.SetString("CurrentUserId", resetPasswordViewModel.UserId.ToString());
+            HttpContext.Session.SetString("CurrentUserName", resetPasswordViewModel.UserName.ToString());
+            return RedirectToAction("Index", "Home");
+        }
+
+        }
 }

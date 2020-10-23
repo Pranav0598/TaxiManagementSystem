@@ -28,16 +28,29 @@ namespace TaxiManagementSystem.Controllers
 
         public IActionResult Index()
         {
+            return View();
+        }
+
+        public IActionResult MyEarnings()
+        {
+            return View();
+        }
+
+
+        public IActionResult MyAccount()
+        {
             string userId = HttpContext.Session.GetString("CurrentUserId");
-            if(string.IsNullOrEmpty(userId))
+            if (string.IsNullOrEmpty(userId))
                 return RedirectToAction("Login", "Users");
 
             int currentUserId = Int32.Parse(userId);
 
             Users user = _context.Users.Where(e => e.UserId == currentUserId).FirstOrDefault();
 
-            return View(user?? new Users());
+            return View(user ?? new Users());
         }
+
+
 
         public IActionResult Privacy()
         {

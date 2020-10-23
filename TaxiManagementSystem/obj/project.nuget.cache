@@ -1,10 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "rJV48rV1E0zWCguQkITuuTaVmwDiQKa1hlcv9X8KBCXLnxmao+8Sq/ygbl7ujQ5HZl/rQVzPoQgm1FShX5XiNw==",
+  "dgSpecHash": "4mEy4rD+1YBc9V/SkMikC4L/SVhbb6drBn/Sptb4PReCvRuIzeGGaRIJAAwhEnN22sUBnkA2h+3PASW8EjZ3WA==",
   "success": true,
   "projectFilePath": "C:\\Users\\mirup\\Documents\\Github repository\\TaxiManagementSystem\\TaxiManagementSystem\\TaxiManagementSystem.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\mirup\\.nuget\\packages\\documentformat.openxml\\2.11.3\\documentformat.openxml.2.11.3.nupkg.sha512",
+    "C:\\Users\\mirup\\.nuget\\packages\\jquery\\3.5.1\\jquery.3.5.1.nupkg.sha512",
     "C:\\Users\\mirup\\.nuget\\packages\\microsoft.aspnetcore.html.abstractions\\2.2.0\\microsoft.aspnetcore.html.abstractions.2.2.0.nupkg.sha512",
     "C:\\Users\\mirup\\.nuget\\packages\\microsoft.aspnetcore.razor\\2.2.0\\microsoft.aspnetcore.razor.2.2.0.nupkg.sha512",
     "C:\\Users\\mirup\\.nuget\\packages\\microsoft.aspnetcore.razor.language\\3.1.0\\microsoft.aspnetcore.razor.language.3.1.0.nupkg.sha512",
@@ -83,6 +84,7 @@
     "C:\\Users\\mirup\\.nuget\\packages\\runtime.win-arm64.runtime.native.system.data.sqlclient.sni\\4.4.0\\runtime.win-arm64.runtime.native.system.data.sqlclient.sni.4.4.0.nupkg.sha512",
     "C:\\Users\\mirup\\.nuget\\packages\\runtime.win-x64.runtime.native.system.data.sqlclient.sni\\4.4.0\\runtime.win-x64.runtime.native.system.data.sqlclient.sni.4.4.0.nupkg.sha512",
     "C:\\Users\\mirup\\.nuget\\packages\\runtime.win-x86.runtime.native.system.data.sqlclient.sni\\4.4.0\\runtime.win-x86.runtime.native.system.data.sqlclient.sni.4.4.0.nupkg.sha512",
+    "C:\\Users\\mirup\\.nuget\\packages\\semanticui\\1.3.2.1\\semanticui.1.3.2.1.nupkg.sha512",
     "C:\\Users\\mirup\\.nuget\\packages\\sqlitepclraw.bundle_e_sqlite3\\2.0.2\\sqlitepclraw.bundle_e_sqlite3.2.0.2.nupkg.sha512",
     "C:\\Users\\mirup\\.nuget\\packages\\sqlitepclraw.core\\2.0.2\\sqlitepclraw.core.2.0.2.nupkg.sha512",
     "C:\\Users\\mirup\\.nuget\\packages\\sqlitepclraw.lib.e_sqlite3\\2.0.2\\sqlitepclraw.lib.e_sqlite3.2.0.2.nupkg.sha512",

@@ -172,13 +172,15 @@ C:\Users\mirup\source\repos\TaxiManagementSystem\obj\Debug\netcoreapp3.1\Razor\V
 C:\Users\mirup\source\repos\TaxiManagementSystem\obj\Debug\netcoreapp3.1\Razor\Views\Users\Details.cshtml.g.cs
 C:\Users\mirup\source\repos\TaxiManagementSystem\obj\Debug\netcoreapp3.1\Razor\Views\Users\Edit.cshtml.g.cs
 C:\Users\mirup\source\repos\TaxiManagementSystem\obj\Debug\netcoreapp3.1\Razor\Views\Users\Index.cshtml.g.cs
-C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\TaxiManagementSystem.csprojAssemblyReference.cache
-C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\TaxiManagementSystem.AssemblyInfoInputs.cache
-C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\TaxiManagementSystem.AssemblyInfo.cs
-C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\TaxiManagementSystem.csproj.CoreCompileInputs.cache
-C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\TaxiManagementSystem.MvcApplicationPartsAssemblyInfo.cache
-C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\TaxiManagementSystem.RazorAssemblyInfo.cache
-C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\TaxiManagementSystem.RazorAssemblyInfo.cs
+C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\bin\Debug\netcoreapp3.1\runtimes\linux-x64\native\libe_sqlite3.so
+C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\Razor\Views\Home\MyAccount.cshtml.g.cs
+C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\Razor\Views\Home\UpdatePassword.cshtml.g.cs
+C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\Razor\Views\Users\Create.cshtml.g.cs
+C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\Razor\Views\Users\Details.cshtml.g.cs
+C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\Razor\Views\Users\ForgotPassword.cshtml.g.cs
+C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\Razor\Views\Users\Login.cshtml.g.cs
+C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\Razor\Views\Users\Registration.cshtml.g.cs
+C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\TaxiManagementSystem.RazorTargetAssemblyInfo.cs
 C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\bin\Debug\netcoreapp3.1\appsettings.Development.json
 C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\bin\Debug\netcoreapp3.1\appsettings.json
 C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\bin\Debug\netcoreapp3.1\Properties\launchSettings.json
@@ -315,7 +317,6 @@ C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSy
 C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\bin\Debug\netcoreapp3.1\runtimes\linux-arm64\native\libe_sqlite3.so
 C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\bin\Debug\netcoreapp3.1\runtimes\linux-armel\native\libe_sqlite3.so
 C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\bin\Debug\netcoreapp3.1\runtimes\linux-musl-x64\native\libe_sqlite3.so
-C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\bin\Debug\netcoreapp3.1\runtimes\linux-x64\native\libe_sqlite3.so
 C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\bin\Debug\netcoreapp3.1\runtimes\linux-x86\native\libe_sqlite3.so
 C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\bin\Debug\netcoreapp3.1\runtimes\osx-x64\native\libe_sqlite3.dylib
 C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\bin\Debug\netcoreapp3.1\runtimes\win-arm\native\e_sqlite3.dll
@@ -325,6 +326,13 @@ C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSy
 C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\bin\Debug\netcoreapp3.1\runtimes\unix\lib\netcoreapp2.0\System.Runtime.Caching.dll
 C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp2.0\System.Runtime.Caching.dll
 C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\bin\Debug\netcoreapp3.1\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
+C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\TaxiManagementSystem.csprojAssemblyReference.cache
+C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\TaxiManagementSystem.AssemblyInfoInputs.cache
+C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\TaxiManagementSystem.AssemblyInfo.cs
+C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\TaxiManagementSystem.csproj.CoreCompileInputs.cache
+C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\TaxiManagementSystem.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\TaxiManagementSystem.RazorAssemblyInfo.cache
+C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\TaxiManagementSystem.RazorAssemblyInfo.cs
 C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\TaxiManagementSystem.TagHelpers.input.cache
 C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\TaxiManagementSystem.TagHelpers.output.cache
 C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\TaxiManagementSystem.RazorCoreGenerate.cache
@@ -333,23 +341,23 @@ C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSy
 C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\Razor\Views\Drivers\Details.cshtml.g.cs
 C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\Razor\Views\Drivers\Edit.cshtml.g.cs
 C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\Razor\Views\Drivers\Index.cshtml.g.cs
+C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\Razor\Views\Earnings\MyEarnings.cshtml.g.cs
 C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\Razor\Views\Home\Index.cshtml.g.cs
+C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\Razor\Views\Home\MyEarnings.cshtml.g.cs
 C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\Razor\Views\Home\Privacy.cshtml.g.cs
 C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\Razor\Views\Shared\Error.cshtml.g.cs
 C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_Layout.cshtml.g.cs
+C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_publicLayout.cshtml.g.cs
 C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_ValidationScriptsPartial.cshtml.g.cs
-C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\Razor\Views\Users\Create.cshtml.g.cs
 C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\Razor\Views\Users\Delete.cshtml.g.cs
-C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\Razor\Views\Users\Details.cshtml.g.cs
 C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\Razor\Views\Users\Edit.cshtml.g.cs
 C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\Razor\Views\Users\Index.cshtml.g.cs
-C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\Razor\Views\Users\Login.cshtml.g.cs
-C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\Razor\Views\Users\Registration.cshtml.g.cs
+C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\Razor\Views\Users\Logout.cshtml.g.cs
+C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\Razor\Views\Users\ResetPassword.cshtml.g.cs
 C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\Razor\Views\Users\SuccessfullRegistration.cshtml.g.cs
 C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\Razor\Views\_ViewImports.cshtml.g.cs
 C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\Razor\Views\_ViewStart.cshtml.g.cs
 C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\TaxiManagementSystem.RazorTargetAssemblyInfo.cache
-C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\TaxiManagementSystem.RazorTargetAssemblyInfo.cs
 C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\TaxiManagementSystem.Views.pdb
 C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\TaxiManagementSystem.csproj.CopyComplete
 C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\staticwebassets\TaxiManagementSystem.StaticWebAssets.Manifest.cache
@@ -357,7 +365,3 @@ C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSy
 C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\TaxiManagementSystem.dll
 C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\TaxiManagementSystem.pdb
 C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\TaxiManagementSystem.genruntimeconfig.cache
-C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\Razor\Views\Users\Logout.cshtml.g.cs
-C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_publicLayout.cshtml.g.cs
-C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\Razor\Views\Users\ForgotPassword.cshtml.g.cs
-C:\Users\mirup\Documents\Github repository\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\Razor\Views\Home\UpdatePassword.cshtml.g.cs
