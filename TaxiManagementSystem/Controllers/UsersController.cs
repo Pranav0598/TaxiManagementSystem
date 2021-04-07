@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using TaxiManagementSystem.Model;
 using TaxiManagementSystem.Models;
 using TaxiManagementSystem.Security;
 
@@ -73,6 +74,12 @@ namespace TaxiManagementSystem.Controllers
             {
                 HttpContext.Session.SetString("CurrentUserId", loginViewModel.UserId.ToString());
                 HttpContext.Session.SetString("CurrentUserName", loginViewModel.UserName.ToString());
+
+                if (user.IsOwner)
+                {
+                    return RedirectToAction("Index", "Owners");
+                }
+
                 return RedirectToAction("Index", "Home");
             }
         }
@@ -95,11 +102,26 @@ namespace TaxiManagementSystem.Controllers
             if (registrationViewModel.UserId != 0)
                 return View(registrationViewModel);
 
-            Users user = MapRegistrationModelToUser(registrationViewModel);           
+            Users user = MapRegistrationModelToUser(registrationViewModel);
+            Driver driver = MapRegistrationModelToDriver(registrationViewModel);
+            Owner owner = MapRegistrationModelToOwner(registrationViewModel);
 
             if (ModelState.IsValid)
-            {
+            {                 
                 _context.Add(user);
+                await _context.SaveChangesAsync();
+                if (registrationViewModel.IsOwner) 
+                {
+                    owner.UserId = user.UserId;
+                    _context.Owner.Add(owner);
+                }
+                else
+                {
+                    driver.UserId = user.UserId;
+                    _context.Driver.Add(driver);
+                }
+                    
+
                 await _context.SaveChangesAsync();
                 return RedirectToAction("SuccessfullRegistration", "Users");
             }
@@ -119,12 +141,32 @@ namespace TaxiManagementSystem.Controllers
             user.Email = registrationViewModel.Email;
             user.Age = registrationViewModel.Age;
             user.Password = Encryption.Encrypt(registrationViewModel.Password);
+            user.IsOwner = registrationViewModel.IsOwner;
             return user;
+        }
+
+        public Driver MapRegistrationModelToDriver(RegistrationViewModel registrationViewModel)
+        {
+            Driver driver = new Driver();
+            driver.FirstName = registrationViewModel.FirstName;
+            driver.LastName = registrationViewModel.LastName;
+            driver.Email = registrationViewModel.Email;
+            driver.Age = registrationViewModel.Age;            
+            return driver;
+        }
+
+        public Owner MapRegistrationModelToOwner(RegistrationViewModel registrationViewModel)
+        {
+            Owner owner = new Owner();
+            owner.FirstName = registrationViewModel.FirstName;
+            owner.LastName = registrationViewModel.LastName;
+            owner.Email = registrationViewModel.Email;               
+            return owner;
         }
 
         public RegistrationViewModel validateRegistration(RegistrationViewModel registrationViewModel) 
         {
-            Users user = _context.Users.Where(e => e.UserName == registrationViewModel.UserName && e.Email == registrationViewModel.Email).FirstOrDefault();
+            Users user = _context.Users.Where(e => e.UserName == registrationViewModel.UserName || e.Email == registrationViewModel.Email).FirstOrDefault();
             registrationViewModel.UserId = user?.UserId??0;
             return registrationViewModel;
         }

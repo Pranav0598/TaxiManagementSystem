@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using TaxiManagementSystem.Model;
 using TaxiManagementSystem.Models;
 
 namespace TaxiManagementSystem.Controllers

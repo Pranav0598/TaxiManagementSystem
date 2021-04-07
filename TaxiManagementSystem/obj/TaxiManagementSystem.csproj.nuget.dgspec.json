@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\mirup\\Documents\\Github repository\\TaxiManagementSystem\\TaxiManagementSystem\\TaxiManagementSystem.csproj": {}
+    "C:\\Users\\prana\\Documents\\TaxiManagementSystem\\TaxiManagementSystem\\TaxiManagementSystem.csproj": {}
   },
   "projects": {
-    "C:\\Users\\mirup\\Documents\\Github repository\\TaxiManagementSystem\\TaxiManagementSystem\\TaxiManagementSystem.csproj": {
+    "C:\\Users\\prana\\Documents\\TaxiManagementSystem\\TaxiManagementSystem\\TaxiManagementSystem.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\mirup\\Documents\\Github repository\\TaxiManagementSystem\\TaxiManagementSystem\\TaxiManagementSystem.csproj",
+        "projectUniqueName": "C:\\Users\\prana\\Documents\\TaxiManagementSystem\\TaxiManagementSystem\\TaxiManagementSystem.csproj",
         "projectName": "TaxiManagementSystem",
-        "projectPath": "C:\\Users\\mirup\\Documents\\Github repository\\TaxiManagementSystem\\TaxiManagementSystem\\TaxiManagementSystem.csproj",
-        "packagesPath": "C:\\Users\\mirup\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\mirup\\Documents\\Github repository\\TaxiManagementSystem\\TaxiManagementSystem\\obj\\",
+        "projectPath": "C:\\Users\\prana\\Documents\\TaxiManagementSystem\\TaxiManagementSystem\\TaxiManagementSystem.csproj",
+        "packagesPath": "C:\\Users\\prana\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\prana\\Documents\\TaxiManagementSystem\\TaxiManagementSystem\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\mirup\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\prana\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -26,6 +26,7 @@
         },
         "frameworks": {
           "netcoreapp3.1": {
+            "targetAlias": "netcoreapp3.1",
             "projectReferences": {}
           }
         },
@@ -37,6 +38,7 @@
       },
       "frameworks": {
         "netcoreapp3.1": {
+          "targetAlias": "netcoreapp3.1",
           "dependencies": {
             "DocumentFormat.OpenXml": {
               "target": "Package",
@@ -44,7 +46,7 @@
             },
             "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
-              "version": "[3.1.8, )"
+              "version": "[3.1.13, )"
             },
             "Microsoft.EntityFrameworkCore.Sqlite": {
               "target": "Package",
@@ -54,11 +56,11 @@
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
-              "version": "[3.1.8, )"
+              "version": "[3.1.13, )"
             },
             "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
               "target": "Package",
-              "version": "[3.1.4, )"
+              "version": "[3.1.5, )"
             },
             "SemanticUI": {
               "target": "Package",
@@ -91,7 +93,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.402\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.201\\RuntimeIdentifierGraph.json"
         }
       }
     }

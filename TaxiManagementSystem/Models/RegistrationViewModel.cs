@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
@@ -31,5 +32,7 @@ namespace TaxiManagementSystem.Models
         public string ConfirmPassword { get; set; }
 
         public int ErrorNumber { get; set; }
+        [DisplayName("Are you the Owner?")]
+        public bool IsOwner { get; set; } 
     }
 }

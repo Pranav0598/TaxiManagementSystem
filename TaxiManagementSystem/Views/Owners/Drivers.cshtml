@@ -1,0 +1,143 @@
+﻿@model TaxiManagementSystem.Models.EarningsViewModel
+
+
+@{
+    ViewData["Title"] = "My Earnings";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<div class="container">
+
+    <div class=" row right ">
+        <div class="col-sm-8"><h3>My Earnings</h3></div>
+        <div class="col-sm-4">
+            <!-- Trigger the modal with a button -->
+            <button type="button" class="btn btn-success  text-right" id="openAdd">Add Earnings</button>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <form asp-controller="Earnings" asp-action="GetEarningsForDate" style="display: contents;">
+            <div class="col-sm-8">
+                <input type="hidden" asp-for="UserId" value=@Model.UserId />
+                <input asp-for="EarningsOn" class="form-control" required type="date" id="EarningsOn" />
+            </div>
+            <div class="col-sm-4"><button class="btn-primary" type="submit">Get earnings</button></div>
+        </form>
+    </div>
+
+    <br>
+
+    <div class="row">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Date
+                    </th>
+                    <th>
+                        Earnings
+                    </th>
+                    <th>
+                        Expenditure
+                    </th>
+                    <th>
+                        Income Earned
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Earnings)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ShiftDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Earning)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Expenditure)
+                        </td>
+                        <td>
+
+                            @Html.DisplayFor(modelItem => item.IncomeEarned)
+                        </td>
+                        <!--<td>
+                        <a asp-action="Edit" asp-route-id="@item.UserId">Edit</a> |-->
+                        @*<a asp-action="Delete" asp-route-id="@item.UserId">Delete</a>*@
+                        <!--</td>-->
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header" style="padding:35px 50px;">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4><span class="glyphicon glyphicon-lock"></span> </h4>
+                </div>
+                <div class="modal-body" style="padding:40px 50px;">
+                    <form asp-controller="Earnings" asp-action="AddEarnings">
+                        <input type="hidden" asp-for="UserId" value=@Model.UserId />
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group">
+                            <label asp-for="ShiftDate" class="control-label required"></label>
+                            <input asp-for="ShiftDate" class="form-control" required type="date" />
+                            <span asp-validation-for="ShiftDate" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Earning" class="control-label required"></label>
+                            <input asp-for="Earning" class="form-control" required type="number" />
+                            <span asp-validation-for="Earning" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Expenditure" class="control-label required"></label>
+                            <input asp-for="Expenditure" class="form-control" required type="number" />
+                            <span asp-validation-for="Expenditure" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="AddEarning" class="btn btn-success" />
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger btn-default pull-left" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancel</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@if (Model.Earnings.Any())
+{
+    <div class="container">
+        <div class="row rounded" style="    bottom: 100px;     width:100%;">
+            <div class="col-sm-6"></div>
+            <div class="col-sm-3"><b>Weekly earnings : @Model.WeeklyEarnings</b></div>
+            <div class="col-sm-3"><b>Monthly earnings : @Model.MonthlyEarnings</b></div>
+        </div>
+    </div>
+
+}
+<script>
+    $(document).ready(function () {
+        $("#openAdd").click(function () {
+            $("#myModal").modal("show");
+        });
+    });
+
+
+</script>
+

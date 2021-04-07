@@ -14,6 +14,7 @@ namespace TaxiManagementSystem.Models
         public DateTime ShiftDate { get; set; }
         [Required]
         public int UserId { get; set; }
+        public bool IsActive { get; set; }
         public double Earning { get; set; }
         public double Expenditure { get; set; }
         public double IncomeEarned { get; set; }   

@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using TaxiManagementSystem.Model;
 using TaxiManagementSystem.Models;
 using TaxiManagementSystem.Security;
 
@@ -43,6 +44,9 @@ namespace TaxiManagementSystem.Controllers
             if (string.IsNullOrEmpty(userId))
                 return RedirectToAction("Login", "Users");
 
+            var driverId = _context.Driver.FirstOrDefault(x=>x.UserId == int.Parse(userId)).DriverId;
+            
+
             if (earning.UserId == 0)
             {
                 earning = new EarningsViewModel();
@@ -51,6 +55,7 @@ namespace TaxiManagementSystem.Controllers
             }
             earning.EarningsOn = earning.EarningsOn == new DateTime()? DateTime.Now : earning.EarningsOn;
             earning = GetEarnings(earning);
+            earning.IsActive = _context.OwnerDriver.Any(x => x.DriverId == driverId && x.IsActiveDriver != false);
             return View(earning);
         }
 

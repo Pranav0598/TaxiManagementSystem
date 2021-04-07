@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using TaxiManagementSystem.Model;
 using TaxiManagementSystem.Models;
 
 namespace TaxiManagementSystem.Controllers
@@ -21,7 +23,53 @@ namespace TaxiManagementSystem.Controllers
         // GET: Drivers
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Driver.ToListAsync());
+            string userId = HttpContext.Session.GetString("CurrentUserId");
+            if (string.IsNullOrEmpty(userId))
+                return RedirectToAction("Login", "Users");
+
+            Owner owner = _context.Owner.FirstOrDefault(x=>x.UserId == int.Parse(userId));
+
+            IEnumerable<DriverViewModel> allDrivers = GetAllDrivers();
+            IEnumerable<DriverViewModel> drivers = GetDrivers(owner.OwnerId);
+            OwnerDriversViewModel model = new OwnerDriversViewModel();
+            model.AllDrivers = allDrivers;
+            model.CurrentDrivers = drivers;
+            model.SelectedDriver = new int();
+            return View(model);
+        }
+
+        public IEnumerable<DriverViewModel> GetAllDrivers()
+        {
+            IEnumerable<Driver> drivers = (IEnumerable<Driver>)_context.Driver.ToList();
+            IEnumerable<DriverViewModel> modelDrivers = MapDriverToViewModel(drivers);
+
+            return modelDrivers;
+        }
+
+
+        public IEnumerable<DriverViewModel> GetDrivers(int ownerId)
+        {
+            List<int> driverIds = _context.OwnerDriver.Where(x=>x.OwnerId == ownerId).Select(x=>x.DriverId).ToList(); 
+            IEnumerable<Driver> drivers =_context.Driver.Where(x=> driverIds.Any(y=>y == x.DriverId)).ToList();
+            IEnumerable<DriverViewModel> modelDrivers = MapDriverToViewModel(drivers);
+
+            return modelDrivers;
+        }
+
+        private IEnumerable<DriverViewModel> MapDriverToViewModel(IEnumerable<Driver> drivers) 
+        {
+            List<DriverViewModel> viewModelDrivers = new List<DriverViewModel>();
+            foreach (Driver d in drivers) 
+            {
+                DriverViewModel driver = new DriverViewModel();
+                driver.DriverId = d.DriverId;
+                driver.Name = d.FirstName+" "+d.LastName;
+                driver.Phonenumber = d.Phonenumber;
+                driver.Email = d.Email;
+                driver.DriversLicense = d.DriversLicense;
+                viewModelDrivers.Add(driver);
+            }
+            return (IEnumerable<DriverViewModel>)viewModelDrivers;
         }
 
         // GET: Drivers/Details/5
@@ -85,7 +133,7 @@ namespace TaxiManagementSystem.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("DriverId,LastName,FirstName,Age,Email,Phonenumber,DriversLicense")] Driver driver)
+        public async Task<IActionResult> Edit(int id, [Bind("DriverId,LastName,FirstName,Age,Email,Phonenumber,DriversLicense")] Models.Driver driver)
         {
             if (id != driver.DriverId)
             {
@@ -120,18 +168,24 @@ namespace TaxiManagementSystem.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Index));
             }
 
-            var driver = await _context.Driver
-                .FirstOrDefaultAsync(m => m.DriverId == id);
-            if (driver == null)
+            string userId = HttpContext.Session.GetString("CurrentUserId");
+            if (string.IsNullOrEmpty(userId))
+                return RedirectToAction("Login", "Users");
+            var currentOwner = _context.Owner
+              .FirstOrDefault(m => m.UserId == int.Parse(userId));
+
+            var ownerDriver = _context.OwnerDriver.FirstOrDefault(x=>x.DriverId == id && x.OwnerId == currentOwner.OwnerId);           
+            if (ownerDriver == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Index));
             }
-
-            return View(driver);
-        }
+            _context.OwnerDriver.Remove(ownerDriver);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));           
+            }
 
         // POST: Drivers/Delete/5
         [HttpPost, ActionName("Delete")]

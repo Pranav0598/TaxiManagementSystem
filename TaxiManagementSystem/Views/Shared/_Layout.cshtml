@@ -31,28 +31,15 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="MyAccount">My Account</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                        <li class="nav-item text-right">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Logout">Logout</a>
-                        </li>
+                        </li>                     
                     </ul>
                 </div>
                 <div class="ui left demo vertical inverted sidebar labeled icon menu">
-                    <a class="item">
-                        <i class="home icon"></i>
-                        Home
-                    </a>
-                    <a class="item">
-                        <i class="block layout icon"></i>
-                        Topics
-                    </a>
-                    <a class="item">
-                        <i class="smile icon"></i>
-                        Friends
-                    </a>
+                    <ul class="navbar-nav flex-grow-1">                       
+                        <li class="nav-item text-right">  
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Logout">Logout</a>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </nav>
