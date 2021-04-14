@@ -24,6 +24,9 @@
                 <th>
                     @Html.DisplayNameFor(model => model.CurrentDrivers.FirstOrDefault().Phonenumber)
                 </th>
+                <th>
+                    Is Active
+                </th>
             </tr>
         </thead>
         <tbody>
@@ -37,7 +40,10 @@
                         @Html.DisplayFor(modelItem => item.Phonenumber)
                     </td>
                     <td>
-                        <a asp-action="Delete" asp-route-id="@item.DriverId" style=" color:red;">Delete</a>
+                    Active
+                        </td>
+                    <td>
+                        <a asp-action="Delete" asp-route-id="@item.DriverId" style=" color:red;">Remove</a>
                     </td>
                 </tr>
             }
@@ -72,7 +78,6 @@
     </div>
 </div>
 
-</div>
 <script>
     $(document).ready(function () {
         $("#openAdd").click(function () {

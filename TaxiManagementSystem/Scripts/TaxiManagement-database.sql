@@ -147,3 +147,18 @@ ALTER TABLE [dbo].[OwnerDriver]  WITH CHECK ADD FOREIGN KEY([DriverId])
 REFERENCES [dbo].[Driver] ([DriverId])
 GO
 
+CREATE TABLE [dbo].[Taxi](
+	[TaxiId] [int] IDENTITY(1,1) NOT NULL,
+	[Model] [varchar](255) NOT NULL,
+	[Make] [varchar](255) NULL,
+	[Registration] [varchar](255) NOT NULL,
+	[Comments] [int] NOT NULL,
+	[IsWorking] [int] NOT NULL,
+	[RegoExpiry] [datetime] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[TaxiId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+

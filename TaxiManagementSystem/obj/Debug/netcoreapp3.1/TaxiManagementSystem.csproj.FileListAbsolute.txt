@@ -574,3 +574,9 @@ C:\Users\prana\Documents\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\net
 C:\Users\prana\Documents\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\TaxiManagementSystem.dll
 C:\Users\prana\Documents\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\TaxiManagementSystem.pdb
 C:\Users\prana\Documents\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\TaxiManagementSystem.genruntimeconfig.cache
+C:\Users\prana\Documents\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\Razor\Views\Taxis\Create.cshtml.g.cs
+C:\Users\prana\Documents\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\Razor\Views\Taxis\Delete.cshtml.g.cs
+C:\Users\prana\Documents\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\Razor\Views\Taxis\Details.cshtml.g.cs
+C:\Users\prana\Documents\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\Razor\Views\Taxis\Edit.cshtml.g.cs
+C:\Users\prana\Documents\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\Razor\Views\Taxis\Index - Copy.cshtml.g.cs
+C:\Users\prana\Documents\TaxiManagementSystem\TaxiManagementSystem\obj\Debug\netcoreapp3.1\Razor\Views\Taxis\Index.cshtml.g.cs
