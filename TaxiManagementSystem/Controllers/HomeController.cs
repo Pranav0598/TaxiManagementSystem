@@ -73,7 +73,7 @@ namespace TaxiManagementSystem.Controllers
         public EarningsViewModel GetEarningsForDriver(EarningsViewModel earning)
         {
             earning.Earnings = _context.Earnings.Where(x => x.DriverId == earning.DriverId)
-                .OrderBy(x => x.ShiftDate);
+                .OrderBy(x => x.ShiftDate).ToList();
             earning.MonthlyEarnings = (double)earning.Earnings.Sum(x => x.IncomeEarned);
 
             return earning;

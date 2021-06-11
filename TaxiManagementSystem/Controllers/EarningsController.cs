@@ -1,26 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Mail;
-using System.Net.Security;
-using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
 using ClosedXML.Excel;
-using DocumentFormat.OpenXml.Drawing.ChartDrawing;
-using DocumentFormat.OpenXml.Office.CustomXsn;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using TaxiManagementSystem.Model;
 using TaxiManagementSystem.Models;
-using TaxiManagementSystem.Security;
 
 namespace TaxiManagementSystem.Controllers
 {
@@ -39,9 +30,9 @@ namespace TaxiManagementSystem.Controllers
 
 
         [HttpGet]
-        public IActionResult MyEarnings(EarningsViewModel? earning)
+        public IActionResult MyEarnings(EarningsViewModel earning)
         {
-            string userId = HttpContext.Session.GetString("CurrentUserId");
+            var userId = HttpContext.Session.GetString("CurrentUserId");
             if (string.IsNullOrEmpty(userId))
                 return RedirectToAction("Login", "Users");
 
@@ -51,13 +42,13 @@ namespace TaxiManagementSystem.Controllers
             if (earning.UserId == 0)
             {
                 earning = new EarningsViewModel();
-                earning.UserId = Int32.Parse(userId);
+                earning.UserId = int.Parse(userId);
                 earning.ShiftDate = DateTime.Now;
             }
 
             earning.EarningsOn = earning.EarningsOn == new DateTime() ? DateTime.Now : earning.EarningsOn;
-            earning = GetEarnings(earning);
             earning.DriverId = driver.DriverId;
+            earning = GetEarnings(earning);
             earning.IsActive =
                 _context.OwnerDriver.Any(x => x.DriverId == driver.DriverId && x.IsActiveDriver != false);
             earning.AllSchedules = _context.Schedule.Include(c => c.Taxi).Where(x => x.DriverId == driver.DriverId)
@@ -76,12 +67,15 @@ namespace TaxiManagementSystem.Controllers
                 return RedirectToAction("MyEarnings", "Earnings",
                     new
                     {
-                        ShiftDate = earningsViewModel.ShiftDate, EarningsOn = earningsViewModel.EarningsOn,
-                        UserId = earningsViewModel.UserId, WeeklyEarnings = earningsViewModel.WeeklyEarnings,
-                        MonthlyEarnings = earningsViewModel.MonthlyEarnings, DriverId = earningsViewModel.DriverId
+                        earningsViewModel.ShiftDate,
+                        earningsViewModel.EarningsOn,
+                        earningsViewModel.UserId,
+                        earningsViewModel.WeeklyEarnings,
+                        earningsViewModel.MonthlyEarnings,
+                        earningsViewModel.DriverId
                     });
 
-            Earnings earning = MapViewModelToEarnings(earningsViewModel);
+            var earning = MapViewModelToEarnings(earningsViewModel);
             var earningExists =
                 _context.Earnings.FirstOrDefault(
                     x => x.DriverId == earning.DriverId && x.ShiftDate == earning.ShiftDate);
@@ -104,11 +98,13 @@ namespace TaxiManagementSystem.Controllers
             return RedirectToAction("MyEarnings", "Earnings",
                 new
                 {
-                    ShiftDate = earningsViewModel.ShiftDate, EarningsOn = earningsViewModel.EarningsOn,
-                    UserId = earning.UserId, WeeklyEarnings = earningsViewModel.WeeklyEarnings,
-                    MonthlyEarnings = earningsViewModel.MonthlyEarnings, DriverId = earningsViewModel.DriverId
+                    earningsViewModel.ShiftDate,
+                    earningsViewModel.EarningsOn,
+                    earning.UserId,
+                    earningsViewModel.WeeklyEarnings,
+                    earningsViewModel.MonthlyEarnings,
+                    earningsViewModel.DriverId
                 });
-
         }
 
 
@@ -116,37 +112,74 @@ namespace TaxiManagementSystem.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult GetEarningsForDate(EarningsViewModel earningsViewModel)
         {
-            string userId = HttpContext.Session.GetString("CurrentUserId");
+            var userId = HttpContext.Session.GetString("CurrentUserId");
             if (string.IsNullOrEmpty(userId))
                 return RedirectToAction("Login", "Users");
 
+            var driver = _context.Driver.First(x => x.UserId == int.Parse(userId));
 
-            EarningsViewModel earning = new EarningsViewModel();
+            earningsViewModel.Earnings = new List<Earnings>();
+            var dateearnings = new LinkedList<Earnings>();
+            if (earningsViewModel.IncludeDateSearch)
+            {
+                earningsViewModel.EarningsOn = earningsViewModel.SearchDate;
+                earningsViewModel = GetOwnerEarningsForDate(earningsViewModel);
+            }
+
+            else if (earningsViewModel.Search != null)
+            {
+                var searchResult = SearchByDriver(earningsViewModel, driver.DriverId);
+                var l1 = earningsViewModel.Earnings.Select(x => x.EarningId).Concat(searchResult.Earnings.Select(x => x.EarningId)).ToList();
+
+                earningsViewModel.Earnings = _context.Earnings.Where(x => l1.Contains(x.EarningId)).ToList();
+            }
+            else
+            {
+                earningsViewModel.Earnings = _context.Earnings.ToList();
+            }
+
+            if (earningsViewModel?.Earning == null || (!earningsViewModel?.Earnings?.Any() ?? true))
+            {
+                earningsViewModel.Earnings = new List<Earnings>();
+                earningsViewModel.MonthlyEarnings = 0;
+                earningsViewModel.WeeklyEarnings = 0;
+            }
+            else
+            {
+                earningsViewModel.WeeklyEarnings = earningsViewModel
+                    .Earnings.Select(x => x.IncomeEarned ?? 0).Sum();
+            }
+
+            earningsViewModel.Earnings = earningsViewModel.Earnings;
+            earningsViewModel.MonthlyEarnings = earningsViewModel.MonthlyEarnings;
+            earningsViewModel.UserId = int.Parse(userId);
+
+
+            var earning = new EarningsViewModel();
             earning.EarningsOn = earningsViewModel.EarningsOn;
-            earning.UserId = Int32.Parse(userId);
-            earning = GetEarnings(earning);
+            earning.UserId = int.Parse(userId);
             return RedirectToAction("MyEarnings", "Earnings",
                 new
                 {
-                    ShiftDate = earningsViewModel.ShiftDate, EarningsOn = earning.EarningsOn, UserId = earning.UserId,
-                    WeeklyEarnings = earning.WeeklyEarnings, MonthlyEarnings = earning.MonthlyEarnings,
-                    DriverId = earningsViewModel.DriverId
+                    earningsViewModel.ShiftDate,
+                    earning.EarningsOn,
+                    earning.UserId,
+                    earning.WeeklyEarnings,
+                    earning.MonthlyEarnings,
+                    earningsViewModel.DriverId
                 });
         }
 
         public EarningsViewModel validateEarning(EarningsViewModel earningsViewModel)
         {
-            if (earningsViewModel.ShiftDate == new DateTime())
-            {
-                earningsViewModel.Error = "Invalid date";
-            }
+            if (earningsViewModel.ShiftDate == new DateTime()) earningsViewModel.Error = "Invalid date";
 
             return earningsViewModel;
         }
 
         public Earnings MapViewModelToEarnings(EarningsViewModel earningsViewModel)
         {
-            Earnings earning = new Earnings();
+            var earning = new Earnings();
             earning.UserId = earningsViewModel.UserId;
             earning.Earning = earningsViewModel.Earning;
             earning.Expenditure = earningsViewModel.Expenditure;
@@ -160,23 +193,22 @@ namespace TaxiManagementSystem.Controllers
 
         public double CalculateIncome(EarningsViewModel earningsViewModel)
         {
-            double profit = earningsViewModel.Earning - earningsViewModel.Expenditure;
+            var profit = earningsViewModel.Earning - earningsViewModel.Expenditure;
             if (profit > 0)
                 return profit / 2;
-            else
-                return profit;
+            return profit;
         }
 
         public EarningsViewModel GetEarnings(EarningsViewModel earning)
         {
-            DateTime monday = earning.EarningsOn.AddDays(-(int) earning.EarningsOn.DayOfWeek + (int) DayOfWeek.Monday);
-            DateTime sunday = monday.AddDays(6);
-            earning.Earnings = _context.Earnings.Where(e => e.ShiftDate >= monday && e.ShiftDate <= sunday)
-                .OrderBy(x => x.ShiftDate);
+            var monday = earning.EarningsOn.AddDays(-(int) earning.EarningsOn.DayOfWeek + (int) DayOfWeek.Monday);
+            var sunday = monday.AddDays(6);
+            earning.Earnings = _context.Earnings.Where(x => x.DriverId == earning.DriverId).ToList();
 
-            earning.WeeklyEarnings = earning.Earnings.Select(x => x.IncomeEarned ?? 0).Sum();
-            DateTime firstDayOfMonth = new DateTime(earning.EarningsOn.Year, earning.EarningsOn.Month, 1);
-            DateTime lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
+            earning.WeeklyEarnings = earning.Earnings.Where(e => e.ShiftDate >= monday && e.ShiftDate <= sunday)
+                .OrderBy(x => x.ShiftDate).Select(x => x.IncomeEarned ?? 0).Sum();
+            var firstDayOfMonth = new DateTime(earning.EarningsOn.Year, earning.EarningsOn.Month, 1);
+            var lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
             earning.MonthlyEarnings = _context.Earnings
                 .Where(e => e.ShiftDate >= firstDayOfMonth && e.ShiftDate <= lastDayOfMonth)
                 .Select(x => x.IncomeEarned ?? 0).Sum();
@@ -184,11 +216,10 @@ namespace TaxiManagementSystem.Controllers
         }
 
 
-
         [HttpGet]
         public IActionResult OwnerEarnings(EarningsViewModel? earning)
         {
-            string userId = HttpContext.Session.GetString("CurrentUserId");
+            var userId = HttpContext.Session.GetString("CurrentUserId");
             if (string.IsNullOrEmpty(userId))
                 return RedirectToAction("Login", "Users");
 
@@ -196,68 +227,80 @@ namespace TaxiManagementSystem.Controllers
             if (earning.UserId == 0)
             {
                 earning = new EarningsViewModel();
-                earning.UserId = Int32.Parse(userId);
+                earning.UserId = int.Parse(userId);
                 earning.ShiftDate = DateTime.Now;
             }
 
-            earning.Earnings = _context.Earnings.Include(x=>x.Taxi).Include(y=>y.Driver).ToList();
+            earning.Earnings = _context.Earnings.Include(x => x.Taxi).Include(y => y.Driver).ToList();
 
             earning.WeeklyEarnings = earning.Earnings.Select(x => x.IncomeEarned ?? 0).Sum();
-            DateTime firstDayOfMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
-            DateTime lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
+            var firstDayOfMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            var lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
             earning.MonthlyEarnings = _context.Earnings
-                    .Where(e => e.ShiftDate >= firstDayOfMonth && e.ShiftDate <= lastDayOfMonth)
-                    .Select(x => x.IncomeEarned ?? 0).Sum();
+                .Where(e => e.ShiftDate >= firstDayOfMonth && e.ShiftDate <= lastDayOfMonth)
+                .Select(x => x.IncomeEarned ?? 0).Sum();
 
             //graph data
-            var earnings = _context.Earnings.ToList();
+            var earnings = _context.Earnings.Include(x => x.Driver).ToList();
+            var income = (from e in earnings
+                    group e by e.Driver
+                    into g
+                    select new {Name = g.Key.FirstName, income = g.Sum(x => x.IncomeEarned)})
+                .OrderByDescending(x => x.income);
+
 
             var a = earnings?.Where(x => x.ShiftDate.Month == 1).Sum(x => x.IncomeEarned) ?? 0;
 
-            List<DataPoint> dataPoints1 = new List<DataPoint>();
-
-            dataPoints1.Add(new DataPoint("Jan", earnings?.Where(x => x.ShiftDate.Month == 1 && x.ShiftDate.Year == DateTime.Now.Year).Sum(x => x.IncomeEarned) ?? 0));
-            dataPoints1.Add(new DataPoint("Feb", earnings?.Where(x => x.ShiftDate.Month == 2 && x.ShiftDate.Year == DateTime.Now.Year).Sum(x => x.IncomeEarned) ?? 0));
-            dataPoints1.Add(new DataPoint("Mar", earnings?.Where(x => x.ShiftDate.Month == 3 && x.ShiftDate.Year == DateTime.Now.Year).Sum(x => x.IncomeEarned) ?? 0));
-            dataPoints1.Add(new DataPoint("Apr", earnings?.Where(x => x.ShiftDate.Month == 4 && x.ShiftDate.Year == DateTime.Now.Year).Sum(x => x.IncomeEarned) ?? 0));
-            dataPoints1.Add(new DataPoint("May", earnings?.Where(x => x.ShiftDate.Month == 5 && x.ShiftDate.Year == DateTime.Now.Year).Sum(x => x.IncomeEarned) ?? 0));
-            dataPoints1.Add(new DataPoint("Jun", earnings?.Where(x => x.ShiftDate.Month == 6 && x.ShiftDate.Year == DateTime.Now.Year).Sum(x => x.IncomeEarned) ?? 0));
-            dataPoints1.Add(new DataPoint("Jul", earnings?.Where(x => x.ShiftDate.Month == 7 && x.ShiftDate.Year == DateTime.Now.Year).Sum(x => x.IncomeEarned) ?? 0));
-            dataPoints1.Add(new DataPoint("Aug", earnings?.Where(x => x.ShiftDate.Month == 8 && x.ShiftDate.Year == DateTime.Now.Year).Sum(x => x.IncomeEarned) ?? 0));
-            dataPoints1.Add(new DataPoint("Sep", earnings?.Where(x => x.ShiftDate.Month == 9 && x.ShiftDate.Year == DateTime.Now.Year).Sum(x => x.IncomeEarned) ?? 0));
-            dataPoints1.Add(new DataPoint("Oct", earnings?.Where(x => x.ShiftDate.Month == 10 && x.ShiftDate.Year == DateTime.Now.Year).Sum(x => x.IncomeEarned) ?? 0));
-            dataPoints1.Add(new DataPoint("Nov", earnings?.Where(x => x.ShiftDate.Month == 11 && x.ShiftDate.Year == DateTime.Now.Year).Sum(x => x.IncomeEarned) ?? 0));
-            dataPoints1.Add(new DataPoint("Dec", earnings?.Where(x => x.ShiftDate.Month == 12 && x.ShiftDate.Year == DateTime.Now.Year).Sum(x => x.IncomeEarned) ?? 0));
+            var dataPoints1 = new List<DataPoint>();
+            foreach (var i in income) dataPoints1.Add(new DataPoint(i.Name, i.income ?? 0));
 
 
             ViewBag.DataPoints1 = JsonConvert.SerializeObject(dataPoints1);
-            return View("OwnerEarnings",earning);
+            return View("OwnerEarnings", earning);
         }
 
         public EarningsViewModel Search(EarningsViewModel earning)
         {
             earning.Earnings = _context.Earnings.Include(x => x.Taxi).Include(x => x.Driver).Where(e =>
-                e.Taxi.Registration.Contains(earning.Search) ||
-                (e.Driver.FirstName + " " + e.Driver.LastName).Contains(earning.Search)).OrderBy(x => x.ShiftDate).ToList();
+                    e.Taxi.Registration.Contains(earning.Search) ||
+                    (e.Driver.FirstName + " " + e.Driver.LastName).Contains(earning.Search)).OrderBy(x => x.ShiftDate)
+                .ToList();
             earning.WeeklyEarnings = 0;
             earning.MonthlyEarnings = 0;
-            
+
 
             earning.Earnings = earning?.Earnings ?? new List<Earnings>();
 
             return earning;
         }
 
-        public EarningsViewModel GetOwnerEarningsForDate(EarningsViewModel earning)
+        public EarningsViewModel SearchByDriver(EarningsViewModel earning, int driverId)
         {
-            DateTime monday = earning.EarningsOn.AddDays(-(int)earning.EarningsOn.DayOfWeek + (int)DayOfWeek.Monday);
-            DateTime sunday = monday.AddDays(6);
+            earning.Earnings = _context.Earnings.Include(x => x.Taxi).Include(x => x.Driver).Where(e =>
+                    e.DriverId == driverId && (e.Taxi.Registration.Contains(earning.Search) ||
+                                               (e.Driver.FirstName + " " + e.Driver.LastName).Contains(earning.Search)))
+                .OrderBy(x => x.ShiftDate).ToList();
+            earning.WeeklyEarnings = 0;
+            earning.MonthlyEarnings = 0;
+
+
+            earning.Earnings = earning?.Earnings ?? new List<Earnings>();
+
+            return earning;
+        }
+
+        public EarningsViewModel GetOwnerEarningsForDate(EarningsViewModel earning, int? driverId = 0)
+        {
+            var monday = earning.EarningsOn.AddDays(-(int) earning.EarningsOn.DayOfWeek + (int) DayOfWeek.Monday);
+            var sunday = monday.AddDays(6);
             earning.Earnings = _context.Earnings.Where(e => e.ShiftDate >= monday && e.ShiftDate <= sunday)
                 .OrderBy(x => x.ShiftDate).ToList();
+            if (driverId != null && driverId != 0)
+                earning.Earnings = earning.Earnings.Where(x => x.DriverId == driverId).ToList();
 
             earning.WeeklyEarnings = earning.Earnings.Select(x => x.IncomeEarned ?? 0).Sum();
-            DateTime firstDayOfMonth = new DateTime(earning.EarningsOn.Year, earning.EarningsOn.Month, 1);
-            DateTime lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
+            var firstDayOfMonth = new DateTime(earning.EarningsOn.Year, earning.EarningsOn.Month, 1);
+            var lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
             earning.MonthlyEarnings = _context.Earnings
                 .Where(e => e.ShiftDate >= firstDayOfMonth && e.ShiftDate <= lastDayOfMonth)
                 .Select(x => x.IncomeEarned ?? 0).Sum();
@@ -270,36 +313,35 @@ namespace TaxiManagementSystem.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult GetOwnersEarnings(EarningsViewModel earningsViewModel)
         {
-            string userId = HttpContext.Session.GetString("CurrentUserId");
+            var userId = HttpContext.Session.GetString("CurrentUserId");
             if (string.IsNullOrEmpty(userId))
                 return RedirectToAction("Login", "Users");
 
 
-
-            EarningsViewModel earning = new EarningsViewModel();
+            var earning = new EarningsViewModel();
             earning.Earnings = new List<Earnings>();
             var dateearnings = new LinkedList<Earnings>();
             if (earningsViewModel.IncludeDateSearch)
-                {
-                    earningsViewModel.EarningsOn = earningsViewModel.SearchDate;
-                    earning = GetOwnerEarningsForDate(earningsViewModel);
-                }
+            {
+                earningsViewModel.EarningsOn = earningsViewModel.SearchDate;
+                earning = GetOwnerEarningsForDate(earningsViewModel);
+            }
 
             else if (earningsViewModel.Search != null)
             {
                 var ears = new List<Earnings>();
                 var searchResult = Search(earningsViewModel);
-                ears = (List<Earnings>)(earning.Earnings.Any()
-                   ? (searchResult.Earnings.Any() ? earning?.Earnings.Concat(searchResult.Earnings) : earning?.Earnings)
-                   : searchResult.Earnings);
-                earning.Earnings = ears;
+
+                var l1 = earning.Earnings.Select(x => x.EarningId).Concat(searchResult.Earnings.Select(x => x.EarningId)).ToList();
+
+                earning.Earnings = _context.Earnings.Where(x => l1.Contains(x.EarningId)).ToList();
             }
             else
             {
                 earning.Earnings = _context.Earnings.ToList();
             }
 
-            if (earning?.Earning == null || (!earning?.Earnings?.Any() ?? true) )
+            if (earning?.Earning == null || (!earning?.Earnings?.Any() ?? true))
             {
                 earning.Earnings = new List<Earnings>();
                 earning.MonthlyEarnings = 0;
@@ -313,27 +355,51 @@ namespace TaxiManagementSystem.Controllers
 
             earningsViewModel.Earnings = earning.Earnings;
             earningsViewModel.MonthlyEarnings = earning.MonthlyEarnings;
-            earning.UserId = Int32.Parse(userId);
+            earning.UserId = int.Parse(userId);
 
             //graph data
             var earnings = _context.Earnings.ToList();
 
             var a = earnings?.Where(x => x.ShiftDate.Month == 1).Sum(x => x.IncomeEarned) ?? 0;
 
-            List<DataPoint> dataPoints1 = new List<DataPoint>();
+            var dataPoints1 = new List<DataPoint>();
 
-            dataPoints1.Add(new DataPoint("Jan", earnings?.Where(x => x.ShiftDate.Month == 1 && x.ShiftDate.Year == DateTime.Now.Year).Sum(x => x.IncomeEarned) ?? 0));
-            dataPoints1.Add(new DataPoint("Feb", earnings?.Where(x => x.ShiftDate.Month == 2 && x.ShiftDate.Year == DateTime.Now.Year).Sum(x => x.IncomeEarned) ?? 0));
-            dataPoints1.Add(new DataPoint("Mar", earnings?.Where(x => x.ShiftDate.Month == 3 && x.ShiftDate.Year == DateTime.Now.Year).Sum(x => x.IncomeEarned) ?? 0));
-            dataPoints1.Add(new DataPoint("Apr", earnings?.Where(x => x.ShiftDate.Month == 4 && x.ShiftDate.Year == DateTime.Now.Year).Sum(x => x.IncomeEarned) ?? 0));
-            dataPoints1.Add(new DataPoint("May", earnings?.Where(x => x.ShiftDate.Month == 5 && x.ShiftDate.Year == DateTime.Now.Year).Sum(x => x.IncomeEarned) ?? 0));
-            dataPoints1.Add(new DataPoint("Jun", earnings?.Where(x => x.ShiftDate.Month == 6 && x.ShiftDate.Year == DateTime.Now.Year).Sum(x => x.IncomeEarned) ?? 0));
-            dataPoints1.Add(new DataPoint("Jul", earnings?.Where(x => x.ShiftDate.Month == 7 && x.ShiftDate.Year == DateTime.Now.Year).Sum(x => x.IncomeEarned) ?? 0));
-            dataPoints1.Add(new DataPoint("Aug", earnings?.Where(x => x.ShiftDate.Month == 8 && x.ShiftDate.Year == DateTime.Now.Year).Sum(x => x.IncomeEarned) ?? 0));
-            dataPoints1.Add(new DataPoint("Sep", earnings?.Where(x => x.ShiftDate.Month == 9 && x.ShiftDate.Year == DateTime.Now.Year).Sum(x => x.IncomeEarned) ?? 0));
-            dataPoints1.Add(new DataPoint("Oct", earnings?.Where(x => x.ShiftDate.Month == 10 && x.ShiftDate.Year == DateTime.Now.Year).Sum(x => x.IncomeEarned) ?? 0));
-            dataPoints1.Add(new DataPoint("Nov", earnings?.Where(x => x.ShiftDate.Month == 11 && x.ShiftDate.Year == DateTime.Now.Year).Sum(x => x.IncomeEarned) ?? 0));
-            dataPoints1.Add(new DataPoint("Dec", earnings?.Where(x => x.ShiftDate.Month == 12 && x.ShiftDate.Year == DateTime.Now.Year).Sum(x => x.IncomeEarned) ?? 0));
+            dataPoints1.Add(new DataPoint("Jan",
+                earnings?.Where(x => x.ShiftDate.Month == 1 && x.ShiftDate.Year == DateTime.Now.Year)
+                    .Sum(x => x.IncomeEarned) ?? 0));
+            dataPoints1.Add(new DataPoint("Feb",
+                earnings?.Where(x => x.ShiftDate.Month == 2 && x.ShiftDate.Year == DateTime.Now.Year)
+                    .Sum(x => x.IncomeEarned) ?? 0));
+            dataPoints1.Add(new DataPoint("Mar",
+                earnings?.Where(x => x.ShiftDate.Month == 3 && x.ShiftDate.Year == DateTime.Now.Year)
+                    .Sum(x => x.IncomeEarned) ?? 0));
+            dataPoints1.Add(new DataPoint("Apr",
+                earnings?.Where(x => x.ShiftDate.Month == 4 && x.ShiftDate.Year == DateTime.Now.Year)
+                    .Sum(x => x.IncomeEarned) ?? 0));
+            dataPoints1.Add(new DataPoint("May",
+                earnings?.Where(x => x.ShiftDate.Month == 5 && x.ShiftDate.Year == DateTime.Now.Year)
+                    .Sum(x => x.IncomeEarned) ?? 0));
+            dataPoints1.Add(new DataPoint("Jun",
+                earnings?.Where(x => x.ShiftDate.Month == 6 && x.ShiftDate.Year == DateTime.Now.Year)
+                    .Sum(x => x.IncomeEarned) ?? 0));
+            dataPoints1.Add(new DataPoint("Jul",
+                earnings?.Where(x => x.ShiftDate.Month == 7 && x.ShiftDate.Year == DateTime.Now.Year)
+                    .Sum(x => x.IncomeEarned) ?? 0));
+            dataPoints1.Add(new DataPoint("Aug",
+                earnings?.Where(x => x.ShiftDate.Month == 8 && x.ShiftDate.Year == DateTime.Now.Year)
+                    .Sum(x => x.IncomeEarned) ?? 0));
+            dataPoints1.Add(new DataPoint("Sep",
+                earnings?.Where(x => x.ShiftDate.Month == 9 && x.ShiftDate.Year == DateTime.Now.Year)
+                    .Sum(x => x.IncomeEarned) ?? 0));
+            dataPoints1.Add(new DataPoint("Oct",
+                earnings?.Where(x => x.ShiftDate.Month == 10 && x.ShiftDate.Year == DateTime.Now.Year)
+                    .Sum(x => x.IncomeEarned) ?? 0));
+            dataPoints1.Add(new DataPoint("Nov",
+                earnings?.Where(x => x.ShiftDate.Month == 11 && x.ShiftDate.Year == DateTime.Now.Year)
+                    .Sum(x => x.IncomeEarned) ?? 0));
+            dataPoints1.Add(new DataPoint("Dec",
+                earnings?.Where(x => x.ShiftDate.Month == 12 && x.ShiftDate.Year == DateTime.Now.Year)
+                    .Sum(x => x.IncomeEarned) ?? 0));
 
 
             ViewBag.DataPoints1 = JsonConvert.SerializeObject(dataPoints1);
@@ -345,9 +411,9 @@ namespace TaxiManagementSystem.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Export(EarningsViewModel earningsViewModel)
         {
-            var listofIds = earningsViewModel?.Earnings?.Select(x=>x.EarningId).ToList() ?? new List<int>();
+            var listofIds = earningsViewModel?.Earnings?.Select(x => x.EarningId).ToList() ?? new List<int>();
             var earn = _context.Earnings.Include(x => x.Driver).Include(y => y.Taxi).ToList();
-                //.Where(x => listofIds.Contains(x.EarningId)).ToList();
+            //.Where(x => listofIds.Contains(x.EarningId)).ToList();
 
             using (var workbook = new XLWorkbook())
             {
@@ -358,7 +424,6 @@ namespace TaxiManagementSystem.Controllers
                 worksheet.Cell(currentRow, 3).Value = "Vehicle driven";
                 worksheet.Cell(currentRow, 4).Value = "Income (AUD)";
                 foreach (var e in earn)
-                {
                     if (e?.Driver != null && e?.Taxi != null)
                     {
                         currentRow++;
@@ -367,7 +432,6 @@ namespace TaxiManagementSystem.Controllers
                         worksheet.Cell(currentRow, 3).Value = e.Taxi.Registration;
                         worksheet.Cell(currentRow, 4).Value = "$ " + e.IncomeEarned;
                     }
-                }
 
                 using (var stream = new MemoryStream())
                 {
@@ -385,20 +449,18 @@ namespace TaxiManagementSystem.Controllers
         [HttpGet]
         public IActionResult DriverEarnings(EarningsViewModel? earning)
         {
-            string userId = HttpContext.Session.GetString("CurrentUserId");
+            var userId = HttpContext.Session.GetString("CurrentUserId");
             if (string.IsNullOrEmpty(userId))
                 return RedirectToAction("Login", "Users");
-
-
             if (earning.UserId == 0)
             {
                 earning = new EarningsViewModel();
-                earning.UserId = Int32.Parse(userId);
+                earning.UserId = int.Parse(userId);
                 earning.ShiftDate = DateTime.Now;
             }
 
             earning.AllDrivers = _context.Driver.ToList();
-            
+
             return View("DriverEarnings", earning);
         }
 
@@ -407,41 +469,48 @@ namespace TaxiManagementSystem.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult GetDriverEarnings(EarningsViewModel earningsViewModel)
         {
-            string userId = HttpContext.Session.GetString("CurrentUserId");
+            var userId = HttpContext.Session.GetString("CurrentUserId");
             if (string.IsNullOrEmpty(userId))
                 return RedirectToAction("Login", "Users");
-            
+
 
             if (earningsViewModel.UserId == 0)
             {
                 earningsViewModel = new EarningsViewModel();
-                earningsViewModel.UserId = Int32.Parse(userId);
+                earningsViewModel.UserId = int.Parse(userId);
                 earningsViewModel.ShiftDate = DateTime.Now;
             }
 
-            earningsViewModel.EarningsOn = earningsViewModel.EarningsOn == new DateTime() ? DateTime.Now : earningsViewModel.EarningsOn;
+            earningsViewModel.EarningsOn = earningsViewModel.EarningsOn == new DateTime()
+                ? DateTime.Now
+                : earningsViewModel.EarningsOn;
 
             earningsViewModel = GetEarningsForDriver(earningsViewModel);
             earningsViewModel.DriverId = earningsViewModel.DriverId;
             earningsViewModel.IsActive =
                 _context.OwnerDriver.Any(x => x.DriverId == earningsViewModel.DriverId && x.IsActiveDriver != false);
-            earningsViewModel.AllSchedules = _context.Schedule.Include(c => c.Taxi).Where(x => x.DriverId == earningsViewModel.DriverId)
+            earningsViewModel.AllSchedules = _context.Schedule.Include(c => c.Taxi)
+                .Where(x => x.DriverId == earningsViewModel.DriverId)
                 .ToList();
             earningsViewModel.AllTaxis = earningsViewModel.AllSchedules.Select(x => x.Taxi).ToList();
             earningsViewModel.AllDrivers = _context.Driver.ToList();
 
             //graph data
             var earnings = _context.Earnings.Where(x => x.DriverId == earningsViewModel.DriverId).ToList();
-            DateTime firstDayOfMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
-            DateTime lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
-            var a = earnings?.Where(x => x.DriverId == earningsViewModel.DriverId && x.ShiftDate >= firstDayOfMonth && x.ShiftDate <= lastDayOfMonth);
-            int weeksInMonth = (int)Math.Ceiling(((double)firstDayOfMonth.DayOfWeek + lastDayOfMonth.Day) / 7.0);
-            List<DataPoint> dataPoints1 = new List<DataPoint>();
+            var firstDayOfMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            var lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
+            var a = earnings?.Where(x =>
+                x.DriverId == earningsViewModel.DriverId && x.ShiftDate >= firstDayOfMonth &&
+                x.ShiftDate <= lastDayOfMonth);
+            var weeksInMonth = (int) Math.Ceiling(((double) firstDayOfMonth.DayOfWeek + lastDayOfMonth.Day) / 7.0);
+            var dataPoints1 = new List<DataPoint>();
 
             var startdate = firstDayOfMonth;
-            for (int i = 1; i <= weeksInMonth; i++)
+            for (var i = 1; i <= weeksInMonth; i++)
             {
-                dataPoints1.Add(new DataPoint(startdate.ToString("dd MMM yyy"), earnings.Where(x => x.ShiftDate.Date >= startdate&& x.ShiftDate <= startdate.AddDays(7)).Sum(x => x.IncomeEarned) ?? 0));
+                dataPoints1.Add(new DataPoint(startdate.ToString("dd MMM yyy"),
+                    earnings.Where(x => x.ShiftDate.Date >= startdate && x.ShiftDate <= startdate.AddDays(7))
+                        .Sum(x => x.IncomeEarned) ?? 0));
                 startdate = startdate.AddDays(7);
             }
 
@@ -452,9 +521,9 @@ namespace TaxiManagementSystem.Controllers
 
         public EarningsViewModel GetEarningsForDriver(EarningsViewModel earning)
         {
-            earning.Earnings = _context.Earnings.Where(x=>x.DriverId == earning.DriverId)
-                .OrderBy(x => x.ShiftDate);
-            earning.MonthlyEarnings = (double)earning.Earnings.Sum(x =>x.IncomeEarned);
+            earning.Earnings = _context.Earnings.Where(x => x.DriverId == earning.DriverId)
+                .OrderBy(x => x.ShiftDate).ToList();
+            earning.MonthlyEarnings = (double) earning.Earnings.Sum(x => x.IncomeEarned);
 
             return earning;
         }

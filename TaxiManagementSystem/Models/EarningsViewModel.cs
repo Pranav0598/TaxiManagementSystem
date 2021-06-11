@@ -23,7 +23,7 @@ namespace TaxiManagementSystem.Models
         public double IncomeEarned { get; set; }
 
         //Display model
-        public IEnumerable<Earnings> Earnings { get; set; }
+        public List<Earnings> Earnings { get; set; }
         
         public IEnumerable<Taxi> AllTaxis { get; set; }
 
@@ -31,10 +31,15 @@ namespace TaxiManagementSystem.Models
         public IEnumerable<Schedule> AllSchedules { get; set; }
         public double WeeklyEarnings { get; set; }
         public double MonthlyEarnings { get; set; }
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy hh:mm tt}")]
         public DateTime EarningsOn { get; set; }
         public string Search { get; set; }
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy hh:mm tt}")]
         public DateTime SearchDate { get; set; }
         public bool IncludeDateSearch { get; set; }
+        
+        public double AverageMonthlyEarnings { get; set; }
+        public double AverageWeeklyEarnings { get; set; }
 
         public EarningsViewModel()
         {

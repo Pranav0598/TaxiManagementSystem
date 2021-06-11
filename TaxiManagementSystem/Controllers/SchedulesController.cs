@@ -76,35 +76,7 @@ namespace TaxiManagementSystem.Controllers
             return View(viewModel);
         }
 
-
-        //// GET: Schedules/Details/5
-        //public async Task<IActionResult> Details(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var schedule = await _context.Schedule
-        //        .Include(s => s.Driver)
-        //        .Include(s => s.Taxi)
-        //        .FirstOrDefaultAsync(m => m.ScheduleId == id);
-        //    if (schedule == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return View(schedule);
-        //}
-
-        //// GET: Schedules/Create
-        //public IActionResult Create()
-        //{
-        //    ViewData["DriverId"] = new SelectList(_context.Driver, "DriverId", "Email");
-        //    ViewData["TaxiId"] = new SelectList(_context.Taxi, "TaxiId", "Registration");
-        //    return View();
-        //}
-
+        
         // POST: Schedules/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -169,9 +141,19 @@ namespace TaxiManagementSystem.Controllers
             return schedule;
         }
 
+        private Schedule ConvertEditViewModeltoSchedule(ScheduleViewModel scheduleViewModel)
+        {
+            Schedule schedule = new Schedule();
+            schedule.ScheduleId = scheduleViewModel.EditScheduleId;
+            schedule.TaxiId = scheduleViewModel.EditTaxiId;
+            schedule.DriverId = scheduleViewModel.EditDriverId;
+            schedule.Comments = scheduleViewModel.EditComments;
+            schedule.ShiftTime = scheduleViewModel.EditShifTime;
+            schedule.ShiftTimeEnd = scheduleViewModel.EditShifTimeEnd;
+            return schedule;
+        }
+
         // GET: Schedules/Edit/5
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult Edit(int? id)
         {
             if (id == null)
@@ -213,7 +195,7 @@ namespace TaxiManagementSystem.Controllers
         {
             if (ModelState.IsValid)
             {
-                Schedule schedule = ConvertViewModeltoSchedule(scheduleViewModel);
+                Schedule schedule = ConvertEditViewModeltoSchedule(scheduleViewModel);
                 scheduleViewModel.DisplayEdit = false;
                 try
                 {
@@ -236,15 +218,16 @@ namespace TaxiManagementSystem.Controllers
             return RedirectToAction("Index", "Schedules", scheduleViewModel);
         }
 
-        // GET: Schedules/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteShift(ScheduleViewModel scheduleViewModel)
         {
-            if (id == null)
+            if (scheduleViewModel.DeleteScheduleId == 0)
             {
-                return NotFound();
+                scheduleViewModel.Error = "Internal error! cannot delete this shift.";
+                return RedirectToAction("Index", "Schedules", scheduleViewModel);
             }
-
-            var schedule = await _context.Schedule.FindAsync(id);
+            var schedule = await _context.Schedule.FindAsync(scheduleViewModel.DeleteScheduleId);
             _context.Schedule.Remove(schedule);
             await _context.SaveChangesAsync();
 

@@ -17,13 +17,13 @@
 }
 else
 {
-    <div class="container">
+    <div class="container p-3">
 
-        <div class=" row right ">
+        <div class=" row right p-2 ">
             <div class="col-sm-8"><h3>My Income</h3></div>
             <div class="col-sm-4">
                 <!-- Trigger the modal with a button -->
-                <button type="button" class="btn btn-success  text-right" id="openAdd">Add Earnings</button>
+                
             </div>
         </div>
         <br>
@@ -32,7 +32,6 @@ else
                 <div class="col-sm-6 p-2">
                     <input type="hidden" asp-for="UserId" value=@Model.UserId />
                     <input type="hidden" asp-for="UserId" value=@Model.DriverId />
-                    <input type="hidden" asp-for="UserId" value=@Model.TaxiId />
                     <input asp-for="Search" class="form-control" />
                 </div>
                 <div class="col-sm-2 p-2">
@@ -44,7 +43,7 @@ else
                         Include date
                     </label>
                 </div>
-                <div class="col-sm-2 p-2"><button class="btn btn-primary" type="submit">Get earnings</button></div>
+                <div class="col-sm-2 p-2"><button class="btn btn-primary" type="submit">Search</button><button type="button" class="btn btn-success " id="openAdd">Add Earnings</button></div>
             </form>
         </div>
 
@@ -56,6 +55,9 @@ else
                     <tr>
                         <th>
                             Date
+                        </th>
+                        <th>
+                            Vehicle driven
                         </th>
                         <th>
                             Earnings
@@ -75,6 +77,9 @@ else
                         <tr>
                             <td>
                                 @Html.DisplayFor(modelItem => item.ShiftDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Taxi.Registration)
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.Earning)
@@ -147,8 +152,8 @@ else
         <div class="container">
             <div class="row rounded" style="    bottom: 100px;     width:100%;">
                 <div class="col-sm-6"></div>
-                <div class="col-sm-3"><b>Weekly earnings : @Model.WeeklyEarnings</b></div>
-                <div class="col-sm-3"><b>Monthly earnings : @Model.MonthlyEarnings</b></div>
+                <div class="col-sm-3"><b>Current week's earnings : @Model.WeeklyEarnings</b></div>
+                <div class="col-sm-3"><b>Current monthly earnings : @Model.MonthlyEarnings</b></div>
             </div>
         </div>
 
