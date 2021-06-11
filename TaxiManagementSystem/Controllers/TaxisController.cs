@@ -233,20 +233,6 @@ namespace TaxiManagementSystem.Controllers
             _context.Taxi.Remove(taxi);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-
-            //if (id == null)
-            //{
-            //    return NotFound();
-            //}
-
-            //var taxi = await _context.Taxi
-            //    .FirstOrDefaultAsync(m => m.TaxiId == id);
-            //if (taxi == null)
-            //{
-            //    return NotFound();
-            //}
-
-            //return View(taxi);
         }
 
         // POST: Taxis/Delete/5
