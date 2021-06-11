@@ -9,9 +9,19 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TaxiManagementSystem.Models
 {
-    public partial class AddTaxiViewModel 
+    public partial class AddTaxiViewModel :BaseViewModel
     {
         public IEnumerable<TaxiViewModel> Taxis { get; set; }
         public TaxiViewModel NewTaxi { get; set; }
+
+        public TaxiViewModel EditTaxi { get; set; }
+
+        public bool DisplayEdit { get; set; }
+
+        public SearchViewModel SearchModel { get; set; }
+
+        public List<CarMake> Makes { get; set; }
+
+        public List<CarModel> Models { get; set; }
     }
 }

@@ -2,6 +2,21 @@
   "version": 3,
   "targets": {
     ".NETCoreApp,Version=v3.1": {
+      "ClosedXML/0.95.4": {
+        "type": "package",
+        "dependencies": {
+          "DocumentFormat.OpenXml": "2.7.2",
+          "ExcelNumberFormat": "1.0.10",
+          "Microsoft.CSharp": "4.7.0",
+          "System.Drawing.Common": "4.5.0"
+        },
+        "compile": {
+          "lib/netstandard2.0/ClosedXML.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/ClosedXML.dll": {}
+        }
+      },
       "DocumentFormat.OpenXml/2.11.3": {
         "type": "package",
         "dependencies": {
@@ -12,6 +27,15 @@
         },
         "runtime": {
           "lib/netstandard2.0/DocumentFormat.OpenXml.dll": {}
+        }
+      },
+      "ExcelNumberFormat/1.0.10": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/ExcelNumberFormat.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/ExcelNumberFormat.dll": {}
         }
       },
       "jQuery/3.5.1": {
@@ -884,6 +908,24 @@
           }
         }
       },
+      "Microsoft.Win32.SystemEvents/4.5.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.NETCore.Platforms": "2.0.0"
+        },
+        "compile": {
+          "ref/netstandard2.0/_._": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Microsoft.Win32.SystemEvents.dll": {}
+        },
+        "runtimeTargets": {
+          "runtimes/win/lib/netcoreapp2.0/Microsoft.Win32.SystemEvents.dll": {
+            "assetType": "runtime",
+            "rid": "win"
+          }
+        }
+      },
       "NETStandard.Library/1.6.1": {
         "type": "package",
         "dependencies": {
@@ -1160,8 +1202,11 @@
           }
         }
       },
-      "SemanticUI/1.3.2.1": {
-        "type": "package"
+      "Semantic-UI-2.0/2.1.0": {
+        "type": "package",
+        "dependencies": {
+          "jQuery": "1.8.1"
+        }
       },
       "SQLitePCLRaw.bundle_e_sqlite3/2.0.2": {
         "type": "package",
@@ -1607,6 +1652,29 @@
         },
         "compile": {
           "ref/netstandard1.5/System.Diagnostics.Tracing.dll": {}
+        }
+      },
+      "System.Drawing.Common/4.5.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.NETCore.Platforms": "2.0.0",
+          "Microsoft.Win32.SystemEvents": "4.5.0"
+        },
+        "compile": {
+          "ref/netstandard2.0/System.Drawing.Common.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/System.Drawing.Common.dll": {}
+        },
+        "runtimeTargets": {
+          "runtimes/unix/lib/netcoreapp2.0/System.Drawing.Common.dll": {
+            "assetType": "runtime",
+            "rid": "unix"
+          },
+          "runtimes/win/lib/netcoreapp2.0/System.Drawing.Common.dll": {
+            "assetType": "runtime",
+            "rid": "win"
+          }
         }
       },
       "System.Globalization/4.3.0": {
@@ -2774,6 +2842,27 @@
     }
   },
   "libraries": {
+    "ClosedXML/0.95.4": {
+      "sha512": "YixFPzUJ4Ni2AaW/FbPgzFvdtjIzE/4NKROwI1RqIQHWka7QN9Spt4sHuXaSk9PLmXBkk8newHGW0UWLcLs5GA==",
+      "type": "package",
+      "path": "closedxml/0.95.4",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "closedxml.0.95.4.nupkg.sha512",
+        "closedxml.nuspec",
+        "lib/net40/ClosedXML.dll",
+        "lib/net40/ClosedXML.pdb",
+        "lib/net40/ClosedXML.xml",
+        "lib/net46/ClosedXML.dll",
+        "lib/net46/ClosedXML.pdb",
+        "lib/net46/ClosedXML.xml",
+        "lib/netstandard2.0/ClosedXML.dll",
+        "lib/netstandard2.0/ClosedXML.pdb",
+        "lib/netstandard2.0/ClosedXML.xml",
+        "nuget-logo.png"
+      ]
+    },
     "DocumentFormat.OpenXml/2.11.3": {
       "sha512": "dCugN386ka+LwcOHnxi4gUHbiDeIw0/GEYw1sXFhYiErGFbJpRpscRcn5b12dywUReFCOgGNJ/l16zG5udkC/A==",
       "type": "package",
@@ -2794,6 +2883,23 @@
         "lib/netstandard1.3/DocumentFormat.OpenXml.xml",
         "lib/netstandard2.0/DocumentFormat.OpenXml.dll",
         "lib/netstandard2.0/DocumentFormat.OpenXml.xml"
+      ]
+    },
+    "ExcelNumberFormat/1.0.10": {
+      "sha512": "dRx817M5t0sv4GCJyAXU8qmhFXcqRpCHzLpxNmkMWTvzlfE0/KM7BNk6qEble0ffAr4xT7RyU7s/HpovVlA/9g==",
+      "type": "package",
+      "path": "excelnumberformat/1.0.10",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "excelnumberformat.1.0.10.nupkg.sha512",
+        "excelnumberformat.nuspec",
+        "lib/net20/ExcelNumberFormat.dll",
+        "lib/net20/ExcelNumberFormat.xml",
+        "lib/netstandard1.0/ExcelNumberFormat.dll",
+        "lib/netstandard1.0/ExcelNumberFormat.xml",
+        "lib/netstandard2.0/ExcelNumberFormat.dll",
+        "lib/netstandard2.0/ExcelNumberFormat.xml"
       ]
     },
     "jQuery/3.5.1": {
@@ -4274,6 +4380,26 @@
         "version.txt"
       ]
     },
+    "Microsoft.Win32.SystemEvents/4.5.0": {
+      "sha512": "LuI1oG+24TUj1ZRQQjM5Ew73BKnZE5NZ/7eAdh1o8ST5dPhUnJvIkiIn2re3MwnkRy6ELRnvEbBxHP8uALKhJw==",
+      "type": "package",
+      "path": "microsoft.win32.systemevents/4.5.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.TXT",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/net461/Microsoft.Win32.SystemEvents.dll",
+        "lib/netstandard2.0/Microsoft.Win32.SystemEvents.dll",
+        "microsoft.win32.systemevents.4.5.0.nupkg.sha512",
+        "microsoft.win32.systemevents.nuspec",
+        "ref/net461/Microsoft.Win32.SystemEvents.dll",
+        "ref/netstandard2.0/Microsoft.Win32.SystemEvents.dll",
+        "runtimes/win/lib/netcoreapp2.0/Microsoft.Win32.SystemEvents.dll",
+        "useSharedDesignerContext.txt",
+        "version.txt"
+      ]
+    },
     "NETStandard.Library/1.6.1": {
       "sha512": "WcSp3+vP+yHNgS8EV5J7pZ9IRpeDuARBPN28by8zqff1wJQXm26PVU8L3/fYLBJVU7BtDyqNVWq2KlCVvSSR4A==",
       "type": "package",
@@ -4621,17 +4747,170 @@
         "version.txt"
       ]
     },
-    "SemanticUI/1.3.2.1": {
-      "sha512": "oCXWVI9jN5rvVkSJyhm3bQ6zlESFBM0FbzxgOz8RyQ7kgvnR7witwaWRkfuuz/O4xi2boCbJ+ug/wVXCfi5rTg==",
+    "Semantic-UI-2.0/2.1.0": {
+      "sha512": "c9YwDSGQvFXr76t1/LdUabgXj/ZtkQSRwlKWn4hOR8PpraNujRuB3tUBCZqFZSz3mfyPC5zIJ6TkMqKtO+zuUA==",
       "type": "package",
-      "path": "semanticui/1.3.2.1",
+      "path": "semantic-ui-2.0/2.1.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "Semantic-UI-1.3.2/Content/CSS/semantic.css",
-        "Semantic-UI-1.3.2/Scripts/semantic.js",
-        "semanticui.1.3.2.1.nupkg.sha512",
-        "semanticui.nuspec"
+        "Content/Content/components/accordion.css",
+        "Content/Content/components/accordion.js",
+        "Content/Content/components/accordion.min.css",
+        "Content/Content/components/accordion.min.js",
+        "Content/Content/components/ad.css",
+        "Content/Content/components/ad.min.css",
+        "Content/Content/components/api.js",
+        "Content/Content/components/api.min.js",
+        "Content/Content/components/breadcrumb.css",
+        "Content/Content/components/breadcrumb.min.css",
+        "Content/Content/components/button.css",
+        "Content/Content/components/button.min.css",
+        "Content/Content/components/card.css",
+        "Content/Content/components/card.min.css",
+        "Content/Content/components/checkbox.css",
+        "Content/Content/components/checkbox.js",
+        "Content/Content/components/checkbox.min.css",
+        "Content/Content/components/checkbox.min.js",
+        "Content/Content/components/colorize.js",
+        "Content/Content/components/colorize.min.js",
+        "Content/Content/components/comment.css",
+        "Content/Content/components/comment.min.css",
+        "Content/Content/components/container.css",
+        "Content/Content/components/container.min.css",
+        "Content/Content/components/dimmer.css",
+        "Content/Content/components/dimmer.js",
+        "Content/Content/components/dimmer.min.css",
+        "Content/Content/components/dimmer.min.js",
+        "Content/Content/components/divider.css",
+        "Content/Content/components/divider.min.css",
+        "Content/Content/components/dropdown.css",
+        "Content/Content/components/dropdown.js",
+        "Content/Content/components/dropdown.min.css",
+        "Content/Content/components/dropdown.min.js",
+        "Content/Content/components/embed.css",
+        "Content/Content/components/embed.js",
+        "Content/Content/components/embed.min.css",
+        "Content/Content/components/embed.min.js",
+        "Content/Content/components/feed.css",
+        "Content/Content/components/feed.min.css",
+        "Content/Content/components/flag.css",
+        "Content/Content/components/flag.min.css",
+        "Content/Content/components/form.css",
+        "Content/Content/components/form.js",
+        "Content/Content/components/form.min.css",
+        "Content/Content/components/form.min.js",
+        "Content/Content/components/grid.css",
+        "Content/Content/components/grid.min.css",
+        "Content/Content/components/header.css",
+        "Content/Content/components/header.min.css",
+        "Content/Content/components/icon.css",
+        "Content/Content/components/icon.min.css",
+        "Content/Content/components/image.css",
+        "Content/Content/components/image.min.css",
+        "Content/Content/components/input.css",
+        "Content/Content/components/input.min.css",
+        "Content/Content/components/item.css",
+        "Content/Content/components/item.min.css",
+        "Content/Content/components/label.css",
+        "Content/Content/components/label.min.css",
+        "Content/Content/components/list.css",
+        "Content/Content/components/list.min.css",
+        "Content/Content/components/loader.css",
+        "Content/Content/components/loader.min.css",
+        "Content/Content/components/menu.css",
+        "Content/Content/components/menu.min.css",
+        "Content/Content/components/message.css",
+        "Content/Content/components/message.min.css",
+        "Content/Content/components/modal.css",
+        "Content/Content/components/modal.js",
+        "Content/Content/components/modal.min.css",
+        "Content/Content/components/modal.min.js",
+        "Content/Content/components/nag.css",
+        "Content/Content/components/nag.js",
+        "Content/Content/components/nag.min.css",
+        "Content/Content/components/nag.min.js",
+        "Content/Content/components/popup.css",
+        "Content/Content/components/popup.js",
+        "Content/Content/components/popup.min.css",
+        "Content/Content/components/popup.min.js",
+        "Content/Content/components/progress.css",
+        "Content/Content/components/progress.js",
+        "Content/Content/components/progress.min.css",
+        "Content/Content/components/progress.min.js",
+        "Content/Content/components/rail.css",
+        "Content/Content/components/rail.min.css",
+        "Content/Content/components/rating.css",
+        "Content/Content/components/rating.js",
+        "Content/Content/components/rating.min.css",
+        "Content/Content/components/rating.min.js",
+        "Content/Content/components/reset.css",
+        "Content/Content/components/reset.min.css",
+        "Content/Content/components/reveal.css",
+        "Content/Content/components/reveal.min.css",
+        "Content/Content/components/search.css",
+        "Content/Content/components/search.js",
+        "Content/Content/components/search.min.css",
+        "Content/Content/components/search.min.js",
+        "Content/Content/components/segment.css",
+        "Content/Content/components/segment.min.css",
+        "Content/Content/components/shape.css",
+        "Content/Content/components/shape.js",
+        "Content/Content/components/shape.min.css",
+        "Content/Content/components/shape.min.js",
+        "Content/Content/components/sidebar.css",
+        "Content/Content/components/sidebar.js",
+        "Content/Content/components/sidebar.min.css",
+        "Content/Content/components/sidebar.min.js",
+        "Content/Content/components/site.css",
+        "Content/Content/components/site.js",
+        "Content/Content/components/site.min.css",
+        "Content/Content/components/site.min.js",
+        "Content/Content/components/state.js",
+        "Content/Content/components/state.min.js",
+        "Content/Content/components/statistic.css",
+        "Content/Content/components/statistic.min.css",
+        "Content/Content/components/step.css",
+        "Content/Content/components/step.min.css",
+        "Content/Content/components/sticky.css",
+        "Content/Content/components/sticky.js",
+        "Content/Content/components/sticky.min.css",
+        "Content/Content/components/sticky.min.js",
+        "Content/Content/components/tab.css",
+        "Content/Content/components/tab.js",
+        "Content/Content/components/tab.min.css",
+        "Content/Content/components/tab.min.js",
+        "Content/Content/components/table.css",
+        "Content/Content/components/table.min.css",
+        "Content/Content/components/transition.css",
+        "Content/Content/components/transition.js",
+        "Content/Content/components/transition.min.css",
+        "Content/Content/components/transition.min.js",
+        "Content/Content/components/video.css",
+        "Content/Content/components/video.js",
+        "Content/Content/components/video.min.css",
+        "Content/Content/components/video.min.js",
+        "Content/Content/components/visibility.js",
+        "Content/Content/components/visibility.min.js",
+        "Content/Content/components/visit.js",
+        "Content/Content/components/visit.min.js",
+        "Content/Content/semantic.css",
+        "Content/Content/semantic.min.css",
+        "Content/Content/themes/basic/assets/fonts/icons.eot",
+        "Content/Content/themes/basic/assets/fonts/icons.svg",
+        "Content/Content/themes/basic/assets/fonts/icons.ttf",
+        "Content/Content/themes/basic/assets/fonts/icons.woff",
+        "Content/Content/themes/default/assets/fonts/icons.eot",
+        "Content/Content/themes/default/assets/fonts/icons.otf",
+        "Content/Content/themes/default/assets/fonts/icons.svg",
+        "Content/Content/themes/default/assets/fonts/icons.ttf",
+        "Content/Content/themes/default/assets/fonts/icons.woff",
+        "Content/Content/themes/default/assets/fonts/icons.woff2",
+        "Content/Content/themes/default/assets/images/flags.png",
+        "Content/Scripts/semantic.js",
+        "Content/Scripts/semantic.min.js",
+        "semantic-ui-2.0.2.1.0.nupkg.sha512",
+        "semantic-ui-2.0.nuspec"
       ]
     },
     "SQLitePCLRaw.bundle_e_sqlite3/2.0.2": {
@@ -5642,6 +5921,39 @@
         "ref/xamarinwatchos10/_._",
         "system.diagnostics.tracing.4.3.0.nupkg.sha512",
         "system.diagnostics.tracing.nuspec"
+      ]
+    },
+    "System.Drawing.Common/4.5.0": {
+      "sha512": "AiJFxxVPdeITstiRS5aAu8+8Dpf5NawTMoapZ53Gfirml24p7HIfhjmCRxdXnmmf3IUA3AX3CcW7G73CjWxW/Q==",
+      "type": "package",
+      "path": "system.drawing.common/4.5.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.TXT",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/MonoAndroid10/_._",
+        "lib/MonoTouch10/_._",
+        "lib/net461/System.Drawing.Common.dll",
+        "lib/netstandard2.0/System.Drawing.Common.dll",
+        "lib/xamarinios10/_._",
+        "lib/xamarinmac20/_._",
+        "lib/xamarintvos10/_._",
+        "lib/xamarinwatchos10/_._",
+        "ref/MonoAndroid10/_._",
+        "ref/MonoTouch10/_._",
+        "ref/net461/System.Drawing.Common.dll",
+        "ref/netstandard2.0/System.Drawing.Common.dll",
+        "ref/xamarinios10/_._",
+        "ref/xamarinmac20/_._",
+        "ref/xamarintvos10/_._",
+        "ref/xamarinwatchos10/_._",
+        "runtimes/unix/lib/netcoreapp2.0/System.Drawing.Common.dll",
+        "runtimes/win/lib/netcoreapp2.0/System.Drawing.Common.dll",
+        "system.drawing.common.4.5.0.nupkg.sha512",
+        "system.drawing.common.nuspec",
+        "useSharedDesignerContext.txt",
+        "version.txt"
       ]
     },
     "System.Globalization/4.3.0": {
@@ -8930,12 +9242,13 @@
   },
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v3.1": [
+      "ClosedXML >= 0.95.4",
       "DocumentFormat.OpenXml >= 2.11.3",
       "Microsoft.EntityFrameworkCore.SqlServer >= 3.1.13",
       "Microsoft.EntityFrameworkCore.Sqlite >= 3.1.8",
       "Microsoft.EntityFrameworkCore.Tools >= 3.1.13",
       "Microsoft.VisualStudio.Web.CodeGeneration.Design >= 3.1.5",
-      "SemanticUI >= 1.3.2.1",
+      "Semantic-UI-2.0 >= 2.1.0",
       "System.Security.Cryptography.ProtectedData >= 4.7.0",
       "jQuery >= 3.5.1"
     ]
@@ -8946,11 +9259,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\prana\\Documents\\TaxiManagementSystem\\TaxiManagementSystem\\TaxiManagementSystem.csproj",
+      "projectUniqueName": "C:\\Users\\prana\\OneDrive - Federation University Australia\\Documents\\TaxiManagementSystem\\TaxiManagementSystem\\TaxiManagementSystem.csproj",
       "projectName": "TaxiManagementSystem",
-      "projectPath": "C:\\Users\\prana\\Documents\\TaxiManagementSystem\\TaxiManagementSystem\\TaxiManagementSystem.csproj",
+      "projectPath": "C:\\Users\\prana\\OneDrive - Federation University Australia\\Documents\\TaxiManagementSystem\\TaxiManagementSystem\\TaxiManagementSystem.csproj",
       "packagesPath": "C:\\Users\\prana\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\prana\\Documents\\TaxiManagementSystem\\TaxiManagementSystem\\obj\\",
+      "outputPath": "C:\\Users\\prana\\OneDrive - Federation University Australia\\Documents\\TaxiManagementSystem\\TaxiManagementSystem\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\prana\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -8979,6 +9292,10 @@
       "netcoreapp3.1": {
         "targetAlias": "netcoreapp3.1",
         "dependencies": {
+          "ClosedXML": {
+            "target": "Package",
+            "version": "[0.95.4, )"
+          },
           "DocumentFormat.OpenXml": {
             "target": "Package",
             "version": "[2.11.3, )"
@@ -9001,9 +9318,9 @@
             "target": "Package",
             "version": "[3.1.5, )"
           },
-          "SemanticUI": {
+          "Semantic-UI-2.0": {
             "target": "Package",
-            "version": "[1.3.2.1, )"
+            "version": "[2.1.0, )"
           },
           "System.Security.Cryptography.ProtectedData": {
             "target": "Package",

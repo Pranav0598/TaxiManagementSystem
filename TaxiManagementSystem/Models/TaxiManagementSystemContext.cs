@@ -16,18 +16,23 @@ namespace TaxiManagementSystem.Model
         {
         }
 
+
+        public virtual DbSet<CarMake> CarMake { get; set; }
+        public virtual DbSet<CarModel> CarModel { get; set; }
         public virtual DbSet<Driver> Driver { get; set; }
         public virtual DbSet<Earnings> Earnings { get; set; }
         public virtual DbSet<Owner> Owner { get; set; }
-        public virtual DbSet<Users> Users { get; set; }
         public virtual DbSet<OwnerDriver> OwnerDriver { get; set; }
+        public virtual DbSet<Schedule> Schedule { get; set; }
+        public virtual DbSet<Taxi> Taxi { get; set; }
+        public virtual DbSet<Users> Users { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=DESKTOP-UB2LK2D;Database=TaxiManagementSystem;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer("Server=DESKTOP-NPG6LGU;Database=TaxiManagementSystem;Trusted_Connection=True;");
             }
         }
 
@@ -36,7 +41,7 @@ namespace TaxiManagementSystem.Model
             modelBuilder.Entity<Driver>(entity =>
             {
                 entity.HasKey(e => e.DriverId)
-                  .HasName("PK__Driver__F1B1CD04A47FCA30");
+                  .HasName("PK__Driver__F1B1CD04C663AF06");
 
                 entity.Property(e => e.DriversLicense)
                   .HasMaxLength(50)
@@ -56,29 +61,43 @@ namespace TaxiManagementSystem.Model
                     .HasMaxLength(255)
                     .IsUnicode(false);
 
+                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
+
                 entity.HasOne(d => d.User)
                    .WithMany(p => p.Driver)
                    .HasForeignKey(d => d.UserId)
                    .OnDelete(DeleteBehavior.ClientSetNull)
-                   .HasConstraintName("FK__Driver__UserId__6EF57B66");
+                   .HasConstraintName("FK__Driver__UserId__2B3F6F97");
             });
 
             modelBuilder.Entity<Earnings>(entity =>
             {
                 entity.HasKey(e => e.EarningId)
-                    .HasName("PK__Earnings__2418A122EDDFDCB9");
+                    .HasName("PK__Earnings__2418A1222A2668CA");
+
+                entity.HasOne(d => d.Driver)
+                    .WithMany(p => p.Earnings)
+                    .HasForeignKey(d => d.DriverId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_DriverEarnings");
+
+                entity.HasOne(d => d.Taxi)
+                    .WithMany(p => p.Earnings)
+                    .HasForeignKey(d => d.TaxiId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_EarningTaxi");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Earnings)
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Earnings__UserId__6C190EBB");
+                    .HasConstraintName("FK__Earnings__UserId__286302EC");
             });
 
             modelBuilder.Entity<Owner>(entity =>
             {
                 entity.HasKey(e => e.OwnerId)
-                  .HasName("PK__Owner__819385B86E2F08F2");
+                  .HasName("PK__Owner__819385B85BF30EB0");
 
                 entity.Property(e => e.Email).IsUnicode(false);
 
@@ -90,13 +109,30 @@ namespace TaxiManagementSystem.Model
                    .WithMany(p => p.Owner)
                    .HasForeignKey(d => d.UserId)
                    .OnDelete(DeleteBehavior.ClientSetNull)
-                   .HasConstraintName("FK__Owner__UserId__71D1E811");
+                   .HasConstraintName("FK__Owner__UserId__2E1BDC42");
+            });
+
+            modelBuilder.Entity<Schedule>(entity =>
+            {
+                entity.Property(e => e.Comments).IsUnicode(false);
+
+                entity.HasOne(d => d.Driver)
+                    .WithMany(p => p.Schedule)
+                    .HasForeignKey(d => d.DriverId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Schedule__Driver__4BAC3F29");
+
+                entity.HasOne(d => d.Taxi)
+                    .WithMany(p => p.Schedule)
+                    .HasForeignKey(d => d.TaxiId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Schedule__TaxiId__4CA06362");
             });
 
             modelBuilder.Entity<Users>(entity =>
             {
                 entity.HasKey(e => e.UserId)
-                    .HasName("PK__Users__1788CC4C43C6B2A2");
+                    .HasName("PK__Users__1788CC4CA4122068");
 
 
                 object p = entity.Property(e => e.IsOwner).HasDefaultValueSql("((0))");
@@ -130,21 +166,31 @@ namespace TaxiManagementSystem.Model
             {
                 object p = entity.Property(e => e.IsActiveDriver).HasDefaultValueSql("((1))");
                 entity.HasKey(e => e.OwnerDriverId)
-                    .HasName("PK__OwnerDri__6B775863AD46EC64");
+                    .HasName("PK__OwnerDri__6B77586316BEBE43");
 
                 entity.HasOne(d => d.Driver)
                     .WithMany(p => p.OwnerDriver)
                     .HasForeignKey(d => d.DriverId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__OwnerDriv__Drive__75A278F5");
+                    .HasConstraintName("FK__OwnerDriv__Drive__32E0915F");
 
                 entity.HasOne(d => d.Owner)
                     .WithMany(p => p.OwnerDriver)
                     .HasForeignKey(d => d.OwnerId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__OwnerDriv__Owner__74AE54BC");
+                    .HasConstraintName("FK__OwnerDriv__Owner__31EC6D26");
             });
 
+            modelBuilder.Entity<Taxi>(entity =>
+            {
+                entity.HasKey(e => e.TaxiId)
+                    .HasName("PK__Taxi__6696EA2BF3F574EF");
+                entity.Property(e => e.Make).IsUnicode(false);
+
+                entity.Property(e => e.Model).IsUnicode(false);
+
+                entity.Property(e => e.Registration).IsUnicode(false);
+            });
 
             OnModelCreatingPartial(modelBuilder);
         }

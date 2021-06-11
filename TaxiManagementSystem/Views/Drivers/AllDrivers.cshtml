@@ -1,0 +1,96 @@
+﻿@model TaxiManagementSystem.Models.AllDriversViewModel
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_OwnerLayout.cshtml";
+}
+
+
+<div class="container">
+    <div class=" row right ">
+        <div class="col-sm-8"><h3>Drivers</h3></div>
+        <div class="col-sm-4">
+            <!-- Trigger the modal with a button -->
+            <button type="button" class="btn btn-success  text-right" id="openAdd">Add Driver</button>
+        </div>
+    </div>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CurrentDrivers.FirstOrDefault().Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CurrentDrivers.FirstOrDefault().Age)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CurrentDrivers.FirstOrDefault().DriversLicense)
+            </th>
+            <th>
+            </th>
+           
+        </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.CurrentDrivers)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Age)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DriversLicense)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.DriverId">Edit</a> |
+                        <a asp-action="Delete" asp-route-id="@item.DriverId" style="color: red;">Remove</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header" style="padding:35px 50px;">
+                    <h3>Add Driver</h3>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>                    
+                    <h4><span class="glyphicon glyphicon-lock"></span> </h4>
+                </div>
+                <div class="modal-body" style="padding:40px 50px;">
+                    <form asp-controller="Owners" asp-action="AddDriver">
+                        @Html.LabelFor(x => Model.SelectedDriver)<br />
+                        @Html.DropDownListFor(x => Model.SelectedDriver, new SelectList(Model.AllDrivers, "DriverId", "Name"))
+                        <br /><br />
+                        <div class="form-group">
+                            <input type="submit" value="Add Driver" class="btn btn-success" />
+                        </div>
+                    </form>
+                </div>                
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#openAdd").click(function () {
+            $("#myModal").modal("show");
+        });
+        if ("@Model.DisplayEdit" == "True") {
+            $("#myModal").modal("show");
+        }
+    });
+
+
+</script>

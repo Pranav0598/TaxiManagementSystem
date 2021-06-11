@@ -28,14 +28,21 @@ namespace TaxiManagementSystem.Models
         [StringLength(255)]
         public string Email { get; set; }
         public int Phonenumber { get; set; }
+
         [StringLength(50)]
         public string DriversLicense { get; set; }
+        public bool? IsActive { get; set; }
         public int UserId { get; set; }
+        public bool? IsAvailable { get; set; }
 
         [ForeignKey(nameof(UserId))]
         [InverseProperty(nameof(Users.Driver))]
         public virtual Users User { get; set; }
         [InverseProperty("Driver")]
         public virtual ICollection<OwnerDriver> OwnerDriver { get; set; }
+        [InverseProperty("Driver")]
+        public virtual ICollection<Earnings> Earnings { get; set; }
+        [InverseProperty("Driver")]
+        public virtual ICollection<Schedule> Schedule { get; set; }
     }
 }

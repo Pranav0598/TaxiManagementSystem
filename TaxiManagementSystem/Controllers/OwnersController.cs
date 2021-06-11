@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using TaxiManagementSystem.Model;
 using TaxiManagementSystem.Models;
 
@@ -23,40 +24,46 @@ namespace TaxiManagementSystem.Controllers
         // GET: Owners
         public async Task<IActionResult> Index()
         {
-            return View();
-        }
+            OwnerDriversViewModel view = new OwnerDriversViewModel();
+            var schedules = _context.Schedule.Include(s => s.Driver).Where(x => ((x.ShiftTime.Date >= DateTime.Now)&& x.ShiftTime.Date <= DateTime.Now.AddDays(1)) ||  (x.ShiftTimeEnd >= DateTime.Now && x.ShiftTimeEnd <= DateTime.Now.AddDays(1)));
 
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddDriver(OwnerDriversViewModel owner)
-        {
-            if (owner?.SelectedDriver == null || owner.SelectedDriver == 0)
+                //var drivers = _context.Driver.ToList();
+                view.TodaysSchedule = new List<ScheduleViewModel>();
+            var listofschedules = new List<ScheduleViewModel>();
+            if (schedules != null && schedules.Any())
             {
-                return RedirectToAction( "Index", "Drivers");
+                foreach (var sched in schedules)
+                {
+                  //  sched.Driver = drivers.FirstOrDefault(x=>x.DriverId == sched.DriverId);
+                    var newSchedule = convertToScheduleViewModel(sched);
+                    listofschedules.Add(newSchedule);
+                }
+
+                view.TodaysSchedule = listofschedules;
             }
 
-            string userId = HttpContext.Session.GetString("CurrentUserId");
-            if (string.IsNullOrEmpty(userId))
-                return RedirectToAction("Login", "Users");
-            var currentOwner = _context.Owner
-              .FirstOrDefault(m => m.UserId == int.Parse(userId));
+            //graph data
+            var earnings = _context.Earnings.ToList();
 
-            var exists = _context.OwnerDriver.Any(x => x.DriverId == owner.SelectedDriver && x.OwnerId == currentOwner.OwnerId);
-            if (exists)
-            {
-                return RedirectToAction("Index", "Drivers");
-            }
+            var a = earnings?.Where(x => x.ShiftDate.Month == 1).Sum(x => x.IncomeEarned) ?? 0;
 
-            var ownerDriver = new OwnerDriver {
-                OwnerId = currentOwner.OwnerId,
-                DriverId = owner.SelectedDriver
-            };
+            List<DataPoint> dataPoints1 = new List<DataPoint>();
 
-            _context.OwnerDriver.Add(ownerDriver);
-            _context.SaveChanges();
-
-            return RedirectToAction("Index", "Drivers");
+            dataPoints1.Add(new DataPoint("Jan", earnings?.Where(x => x.ShiftDate.Month == 1 && x.ShiftDate.Year == DateTime.Now.Year).Sum(x => x.IncomeEarned) ?? 0));
+            dataPoints1.Add(new DataPoint("Feb", earnings?.Where(x => x.ShiftDate.Month == 2 && x.ShiftDate.Year == DateTime.Now.Year).Sum(x => x.IncomeEarned) ?? 0));
+            dataPoints1.Add(new DataPoint("Mar", earnings?.Where(x => x.ShiftDate.Month == 3 && x.ShiftDate.Year == DateTime.Now.Year).Sum(x => x.IncomeEarned) ?? 0));
+            dataPoints1.Add(new DataPoint("Apr", earnings?.Where(x => x.ShiftDate.Month == 4 && x.ShiftDate.Year == DateTime.Now.Year).Sum(x => x.IncomeEarned) ?? 0));
+            dataPoints1.Add(new DataPoint("May", earnings?.Where(x => x.ShiftDate.Month == 5 && x.ShiftDate.Year == DateTime.Now.Year).Sum(x => x.IncomeEarned) ?? 0));
+            dataPoints1.Add(new DataPoint("Jun", earnings?.Where(x => x.ShiftDate.Month == 6 && x.ShiftDate.Year == DateTime.Now.Year).Sum(x => x.IncomeEarned) ?? 0));
+            dataPoints1.Add(new DataPoint("Jul", earnings?.Where(x => x.ShiftDate.Month == 7 && x.ShiftDate.Year == DateTime.Now.Year).Sum(x => x.IncomeEarned) ?? 0));
+            dataPoints1.Add(new DataPoint("Aug", earnings?.Where(x => x.ShiftDate.Month == 8 && x.ShiftDate.Year == DateTime.Now.Year).Sum(x => x.IncomeEarned) ?? 0));
+            dataPoints1.Add(new DataPoint("Sep", earnings?.Where(x => x.ShiftDate.Month == 9 && x.ShiftDate.Year == DateTime.Now.Year).Sum(x => x.IncomeEarned) ?? 0));
+            dataPoints1.Add(new DataPoint("Oct", earnings?.Where(x => x.ShiftDate.Month == 10 && x.ShiftDate.Year == DateTime.Now.Year).Sum(x => x.IncomeEarned) ?? 0));
+            dataPoints1.Add(new DataPoint("Nov", earnings?.Where(x => x.ShiftDate.Month == 11 && x.ShiftDate.Year == DateTime.Now.Year).Sum(x => x.IncomeEarned) ?? 0));
+            dataPoints1.Add(new DataPoint("Dec", earnings?.Where(x => x.ShiftDate.Month == 12 && x.ShiftDate.Year == DateTime.Now.Year).Sum(x => x.IncomeEarned) ?? 0));
+            ViewBag.DataPoints1 = JsonConvert.SerializeObject(dataPoints1);
+            
+            return View(view);
         }
 
         // GET: Owners/Details/5
@@ -88,7 +95,7 @@ namespace TaxiManagementSystem.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("OwnerId,LastName,FirstName,Email,Phonenumber")] Owner owner)
+        public async Task<IActionResult> Create([Bind("OwnerId,LastName,FirstName,Email,PhoneNumber")] Owner owner)
         {
             if (ModelState.IsValid)
             {
@@ -120,7 +127,7 @@ namespace TaxiManagementSystem.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("OwnerId,LastName,FirstName,Email,Phonenumber")] Owner owner)
+        public async Task<IActionResult> Edit(int id, [Bind("OwnerId,LastName,FirstName,Email,PhoneNumber")] Owner owner)
         {
             if (id != owner.OwnerId)
             {
@@ -182,6 +189,19 @@ namespace TaxiManagementSystem.Controllers
         private bool OwnerExists(int id)
         {
             return _context.Owner.Any(e => e.OwnerId == id);
+        }
+
+        private ScheduleViewModel convertToScheduleViewModel(Schedule schedule)
+        {
+            ScheduleViewModel scheduleViewModel = new ScheduleViewModel();
+            scheduleViewModel.ScheduleId = schedule.ScheduleId;
+            scheduleViewModel.TaxiId = schedule.TaxiId;
+            scheduleViewModel.DriverId = schedule.DriverId;
+            scheduleViewModel.Comments = schedule.Comments;
+            scheduleViewModel.ShifTime = schedule.ShiftTime;
+            scheduleViewModel.ShifTimeEnd = schedule.ShiftTimeEnd;
+            scheduleViewModel.Driver = schedule.Driver;
+            return scheduleViewModel;
         }
     }
 }

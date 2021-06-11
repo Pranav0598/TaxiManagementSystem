@@ -151,7 +151,8 @@ namespace TaxiManagementSystem.Controllers
             driver.FirstName = registrationViewModel.FirstName;
             driver.LastName = registrationViewModel.LastName;
             driver.Email = registrationViewModel.Email;
-            driver.Age = registrationViewModel.Age;            
+            driver.Age = registrationViewModel.Age;
+            driver.IsActive = false;
             return driver;
         }
 
@@ -203,7 +204,7 @@ namespace TaxiManagementSystem.Controllers
                 {
                     mail.From = new MailAddress("pranavsai0507@gmail.com");
                     mail.To.Add(user.Email);
-                    mail.Subject = "Password renewal";
+                    mail.Subject = "Password renewal - Fateh Taxi Management System";
                     mail.Body = "<h1>Pasword Renewal</h1><p>Your new password is <b>"+pwd+"</b></p><p>Please login using this password and reset on login.</p>";
                     mail.IsBodyHtml = true;
 
@@ -236,10 +237,9 @@ namespace TaxiManagementSystem.Controllers
                     ch = Convert.ToChar(Convert.ToInt32(Math.Floor(26 * random.NextDouble() + 65)));
                     builder.Append(ch);
                 }               
-                    return builder.ToString().ToUpper();
-               
-            
+                return builder.ToString().ToUpper();
         }
+
         private bool UsersExists(int id)
         {
             return _context.Users.Any(e => e.UserId == id);
