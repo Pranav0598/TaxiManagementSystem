@@ -20,7 +20,7 @@ else
     <div class="container">
 
         <div class=" row right ">
-            <div class="col-sm-8"><h3>My Earnings</h3></div>
+            <div class="col-sm-8"><h3>My Income</h3></div>
             <div class="col-sm-4">
                 <!-- Trigger the modal with a button -->
                 <button type="button" class="btn btn-success  text-right" id="openAdd">Add Earnings</button>
@@ -29,11 +29,22 @@ else
         <br>
         <div class="row">
             <form asp-controller="Earnings" asp-action="GetEarningsForDate" style="display: contents;">
-                <div class="col-sm-8">
+                <div class="col-sm-6 p-2">
                     <input type="hidden" asp-for="UserId" value=@Model.UserId />
-                    <input asp-for="EarningsOn" class="form-control" required type="date" id="EarningsOn" />
+                    <input type="hidden" asp-for="UserId" value=@Model.DriverId />
+                    <input type="hidden" asp-for="UserId" value=@Model.TaxiId />
+                    <input asp-for="Search" class="form-control" />
                 </div>
-                <div class="col-sm-4"><button class="btn-primary" type="submit">Get earnings</button></div>
+                <div class="col-sm-2 p-2">
+                    <input asp-for="SearchDate" class="form-control" >
+                </div>
+                <div class="col-sm-2 p-2">
+                    @Html.CheckBoxFor(model => model.IncludeDateSearch)
+                    <label class="form-check-label" for="IncludeDateSearch">
+                        Include date
+                    </label>
+                </div>
+                <div class="col-sm-2 p-2"><button class="btn btn-primary" type="submit">Get earnings</button></div>
             </form>
         </div>
 
@@ -75,10 +86,6 @@ else
 
                                 @Html.DisplayFor(modelItem => item.IncomeEarned)
                             </td>
-                            <!--<td>
-                            <a asp-action="Edit" asp-route-id="@item.UserId">Edit</a> |-->
-                            @*<a asp-action="Delete" asp-route-id="@item.UserId">Delete</a>*@
-                            <!--</td>-->
                         </tr>
                     }
                 </tbody>
@@ -99,12 +106,18 @@ else
                     <div class="modal-body" style="padding:40px 50px;">
                         <form asp-controller="Earnings" asp-action="AddEarnings">
                             <input type="hidden" asp-for="UserId" value=@Model.UserId />
+                            <input type="hidden" asp-for="DriverId" value=@Model.DriverId />
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                             <div class="form-group">
-                                <label asp-for="ShiftDate" class="control-label required"></label>
-                                <input asp-for="ShiftDate" class="form-control" required type="date" />
+                                @Html.LabelFor(x => Model.ShiftDate)<br />
+                                @Html.DropDownListFor(x => Model.ShiftDate, new SelectList(Model.AllSchedules, "ShiftTime", "ShiftTime"), new { style = "width: -webkit-fill-available;" })
                                 <span asp-validation-for="ShiftDate" class="text-danger"></span>
                             </div>
+                            <div class="form-group">
+                                @Html.LabelFor(x => Model.TaxiId)<br />
+                                @Html.DropDownListFor(x => Model.TaxiId, new SelectList(Model.AllTaxis, "TaxiId", "Registration"), new { style = "width: -webkit-fill-available;" })
+                                <span asp-validation-for="TaxiId" class="text-danger"></span>
+                            </div> 
                             <div class="form-group">
                                 <label asp-for="Earning" class="control-label required"></label>
                                 <input asp-for="Earning" class="form-control" required type="number" />

@@ -4,55 +4,144 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - TaxiManagementSystem</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    @*<link rel="stylesheet" type="text/css" href="~/lib/Semantic-UI-1.3.2/Content/CSS/semantic.css">*@
-    <link rel="stylesheet" href="~/css/site.css" />
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+          rel="stylesheet" />
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+          rel="stylesheet" />
+    <!-- MDB -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.5.0/mdb.min.css"
+          rel="stylesheet" />
+    <!-- MDB -->
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.5.0/mdb.min.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    @*<script src="~/lib/Semantic-UI-1.3.2/Scripts/semantic.js"></script>*@
-    <script src="~/js/site.js" asp-append-version="true"></script>
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">TaxiManagementSystem</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Owners" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Drivers" asp-action="Index">Drivers</a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="ui left demo vertical inverted sidebar labeled icon menu">
-                    <ul class="navbar-nav flex-grow-1">                       
-                        <li class="nav-item text-right">  
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Logout">Logout</a>
-                        </li>
-                    </ul>
+
+        <div class="collapse" id="navbarToggleExternalContent">
+            <div class="bg-dark p-4">
+                <div class="row">
+                    <div class="col-sm-2 py-2">
+                        <a class=" noHover" asp-area="" asp-controller="Owners" asp-action="Index">
+                            <i class="fab fa-microsoft fa-2x"></i>
+                            <p class="text-white">
+                                Dashboard
+                            </p>
+                        </a>
+                    </div>
+                    <div class="col-sm-2 py-2">
+                        <a class=" noHover" asp-area="" asp-controller="Drivers" asp-action="Index">
+                            <i class="fas fa-users fa-2x"></i>
+                            <p class="text-white">
+                                Driver
+                            </p>
+                        </a>
+                    </div>
+                    <div class="col-sm-2 py-2">
+                        <a class=" noHover" asp-area="" asp-controller="Taxis" asp-action="Index">
+                            <i class="fas fa-taxi fa-2x"></i>
+                            <p class="text-white">
+                                Taxi
+                            </p>
+                        </a>
+                    </div>
+                    <div class="col-sm-2 py-2">
+                        <a class=" noHover" asp-area="" asp-controller="Schedules" asp-action="Index">
+                            <i class="fas fa-calendar-alt fa-2x"></i>
+                            <p class="text-white">
+                                Schedule
+                            </p>
+                        </a>
+                    </div>
+                    <div class="col-sm-2 py-2">
+                        <a class=" noHover" asp-area="" asp-controller="Earnings" asp-action="OwnerEarnings">
+                            <i class="fas fa-dollar-sign fa-2x"></i>
+                            <p class="text-white">
+                                Income
+                            </p>
+                        </a>
+                    </div>
+                    <div class="col-sm-2 py-2">
+                        <a class=" noHover" asp-area="" asp-controller="Earnings" asp-action="DriverEarnings">
+                            <i class="fas fa-hand-holding-usd fa-2x"></i>
+                            <p class="text-white">
+                                Driver's Income
+                            </p>
+                        </a>
+                    </div>
+                    <div class="col-sm-2 py-2">
+                        <a class=" noHover" asp-area="" asp-controller="Home" asp-action="OwnerAccount">
+                            <i class="fas fa-users-cog fa-2x"></i>
+                            <p class="text-white">
+                                My Account
+                            </p>
+                        </a>
+                    </div>
+                    <div class="col-sm-2 py-2">
+                        <a class=" noHover" asp-area="" asp-controller="Users" asp-action="Logout">
+                            <i class="fas fa-power-off fa-2x"></i>
+                            <p class="text-white">
+                                Logout
+                            </p>
+                        </a>
+                    </div>
                 </div>
             </div>
+        </div>
+        <nav class="navbar navbar-dark bg-dark">
+            <div class="container-fluid">
+                <button class="navbar-toggler"
+                        type="button"
+                        data-mdb-toggle="collapse"
+                        data-mdb-target="#navbarToggleExternalContent"
+                        aria-controls="navbarToggleExternalContent"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h4 class="text-white-50">Fateh Group Private Limited </h4>
+            </div>
         </nav>
+
     </header>
+
     <div class="container">
-        <main role="main" class="pb-3">
+        <main role="main" class="pb-3 pt-5">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2020 - TaxiManagementSystem - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
-   
+    
     @RenderSection("Scripts", required: false)
+<!-- Footer -->
+<footer class="bg-dark text-center text-white-50">
+    <div class="text-center" style="        background-color: #4f4f4f;">
+        © 2020 Copyright:
+        <a class="text-white" href="#">Fateh Group Private Limited </a>
+    </div>
+     Copyright 
+</footer>
+<!-- Footer -->
+
+
+<style>
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .noHover {
+            color: unset !important;
+        }
+    footer {
+        position: fixed;
+        bottom: 0px;
+        height: 30px;
+        width: -webkit-fill-available;
+    }
+    </style>
 </body>
 </html>

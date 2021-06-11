@@ -1,4 +1,4 @@
-﻿@model TaxiManagementSystem.Models.Owner
+﻿@model TaxiManagementSystem.Models.OwnerDriversViewModel
 
 
 @{
@@ -6,14 +6,176 @@
     Layout = "~/Views/Shared/_OwnerLayout.cshtml";
 }
 
-
-
 <div class="container">
     <div class="row">
-        <p>
-            Welcome to the Taxi management system.
-        </p>
+        <div class="col-md-2">
+            <div class="card mb-2 shadow-sm">
+                <div class="bg-image ripple" data-mdb-ripple-color="light">
+                    <img src="~/css/Images/Driver.jpg" class="w-100" />
+                    <a asp-area="" asp-controller="Drivers" asp-action="Index">
+                        <div class="mask" style="background-color: rgba(0, 0, 0, 0.8)">
+                            <div class="d-flex justify-content-center align-items-center h-100">
+                                <p class="text-white mb-1">View Driver's</p>
+                            </div>
+                        </div>
+                        <div class="hover-overlay">
+                            <div class="mask" style="background-color: rgba(251, 251, 251, 0.2)"></div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card mb-2 shadow-sm">
+                <div class="bg-image ripple" data-mdb-ripple-color="light">
+                    <img src="~/css/Images/taxi.jpg" class="w-100" />
+                    <a asp-area="" asp-controller="Taxis" asp-action="Index">
+                        <div class="mask" style="background-color: rgba(0, 0, 0, 0.8)">
+                            <div class="d-flex justify-content-center align-items-center h-100">
+                                <p class="text-white mb-0">View Taxi's</p>
+                            </div>
+                        </div>
+                        <div class="hover-overlay">
+                            <div class="mask" style="background-color: rgba(251, 251, 251, 0.2)"></div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card mb-2 shadow-sm">
+                <div class="bg-image ripple" data-mdb-ripple-color="light">
+                    <img src="~/css/Images/Schedules.jpg" class="w-100" />
+                    <a  asp-area="" asp-controller="Schedules" asp-action="Index">
+                        <div class="mask" style="background-color: rgba(0, 0, 0, 0.8)">
+                            <div class="d-flex justify-content-center align-items-center h-100">
+                                <p class="text-white mb-0">View My Schedules</p>
+                            </div>
+                        </div>
+                        <div class="hover-overlay">
+                            <div class="mask" style="background-color: rgba(251, 251, 251, 0.2)"></div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card mb-2 shadow-sm">
+                <div class="bg-image ripple" data-mdb-ripple-color="light">
+                    <img src="~/css/Images/Income.jpg" class="w-100" />
+                    <a asp-area="" asp-controller="Earnings" asp-action="OwnerEarnings">
+                        <div class="mask" style="background-color: rgba(0, 0, 0, 0.8)">
+                            <div class="d-flex justify-content-center align-items-center h-100">
+                                <p class="text-white mb-1">View My Income</p>
+                            </div>
+                        </div>
+                        <div class="hover-overlay">
+                            <div class="mask" style="background-color: rgba(251, 251, 251, 0.2)"></div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card mb-2 shadow-sm">
+                <div class="bg-image ripple" data-mdb-ripple-color="light">
+                    <img src="~/css/Images/DriversIncome.jpg" class="w-100" />
+                    <a  asp-area="" asp-controller="Earnings" asp-action="DriverEarnings">
+                        <div class="mask" style="background-color: rgba(0, 0, 0, 0.8)">
+                            <div class="d-flex justify-content-center align-items-center h-100">
+                                <p class="text-white mb-0">View Driver's Income</p>
+                            </div>
+                        </div>
+                        <div class="hover-overlay">
+                            <div class="mask" style="background-color: rgba(251, 251, 251, 0.2)"></div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card mb-2 shadow-sm">
+                <div class="bg-image ripple" data-mdb-ripple-color="light">
+                    <img src="~/css/Images/MyAccount.jpg" class="w-100" />
+                    <a  asp-area="" asp-controller="Home" asp-action="OwnerAccount">
+                        <div class="mask" style="background-color: rgba(0, 0, 0, 0.4)">
+                            <div class="d-flex justify-content-center align-items-center h-100">
+                                <p class="text-white mb-0">View My Profile</p>
+                            </div>
+                        </div>
+                        <div class="hover-overlay">
+                            <div class="mask" style="background-color: rgba(251, 251, 251, 0.2)"></div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
+    <div class="row pt-4">
+        <div class="col-md-8">
+            <div id="chartContainer" style="height: 400px; width: 100%;"></div>
+            <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+            <script>
+                window.onload = function() {
 
+                    var chart = new CanvasJS.Chart("chartContainer",
+                        {
+                            animationEnabled: true,
+                            title: {
+                                text: "Income for 2021"
+                            },
+                            toolTip: {
+                                shared: true
+                            },
+                            axisY: {
+                                prefix: "$",
+                                title: "Income in (AUD)"
+                            },
+                            data: [
+                                {
+                                    type: "line",
+                                    name: "Income (AUD)",
+                                    showInLegend: true,
+                                    yValueFormatString: "$#,##0.00",
+                                    dataPoints: @Html.Raw(ViewBag.DataPoints1)
+                                }
+                            ]
+                        });
+                    chart.render();
+
+                }
+            </script>
+        </div>
+        <div class="col-md-4">
+            <h4>Today's Schedule</h4>
+            @if (Model.TodaysSchedule.Any())
+            {
+                <ul class="list-group list-group-horizontal">
+                    <li class="list-group-item bg-dark text-white w-50">Shift</li>
+                    <li class="list-group-item bg-dark text-white w-50">Driver</li>
+                </ul>
+
+                foreach (var item in Model.TodaysSchedule)
+                {
+                    <ul class="list-group list-group-horizontal-sm">
+                        <li class="list-group-item">@item.ShifTime.Date.ToString("dd/MM/yyyy") @item.ShifTime.ToString("hh:mm tt") - @item.ShifTimeEnd.ToString("hh:mm tt")</li>
+                        <li class="list-group-item">@item.Driver.FirstName @item.Driver.LastName</li>
+                    </ul>
+                }
+            }
+            else
+            {
+                <p>No drivers are driving today</p>
+            }
+
+        </div>
+    </div>
 </div>
 
+@*<style>
+        #chartContainer {
+            border: 1px solid black;
+            padding: 5px;
+        }
+
+    </style>*@

@@ -1,4 +1,4 @@
-﻿@model TaxiManagementSystem.Models.TaxiViewModel
+﻿@model TaxiManagementSystem.Models.AddTaxiViewModel
 
 @{
     ViewData["Title"] = "Index";
@@ -8,21 +8,46 @@
 
 <div class="container">
     <div class=" row right ">
-        <div class="col-sm-8"><h3>Drivers</h3></div>
+        <div class="col-sm-8"><h3>Taxi</h3></div>
         <div class="col-sm-4">
             <!-- Trigger the modal with a button -->
-            <button type="button" class="btn btn-success  text-right" id="openAdd">Add Taxi</button>
+         
         </div>
     </div>
 
-    <table class="table">
+@if (@Model.Status != null)
+{
+    <div class="alert alert-success" role="alert">
+        @Model.Status
+    </div>
+}
+
+@if (@Model.Error != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @Model.Error
+    </div>
+}
+    <div class="row">
+        <form asp-controller="Taxis" asp-action="Search" style="display: contents;">
+            <div class="col-sm-6 p-2">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input asp-for=@Model.SearchModel.keyword class="form-control"/>
+            </div>
+            <div class="col-sm-1 p-2"><input type="submit" value="Search" class="btn btn-primary" /></div>
+            <div class="col-sm-2 p-2"> <button type="button" class="btn btn-success" data-mdb-toggle="modal" data-mdb-target="#exampleModal"> Add Taxi</button></div>
+        </form>
+    </div>
+
+
+    <table class="table align-middle">
         <thead>
             <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.Taxis.FirstOrDefault().Model)
+                    Model
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Taxis.FirstOrDefault().Make)
+                    Make
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.Taxis.FirstOrDefault().Registration)
@@ -38,19 +63,24 @@
             {
                 <tr>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Model)
+                        @Html.DisplayFor(modelItem => item.Model.Model)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Make)
+                        @Html.DisplayFor(modelItem => item.Make.Make)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Registration)
                     </td>
+                    @if (item.IsWorking)
+                    {
+                        <td style="color: green">  <i class="fas fa-check"></i> </td>
+                    }else
+                    {
+                        <td style="color: red"> <i class="fas fa-times"></i> </td>
+                    }
                     <td>
-                        @Html.DisplayFor(modelItem => item.IsWorking)
-                    </td>
-                    <td>
-                        <a asp-controller="Taxis" asp-action="Delete" asp-route-id="@item.TaxiId" style=" color:red;">Delete</a>
+                        <button type="button" class="btn btn-primary btn-sm px-3" onclick="location.href = '@Url.Action("Edit", "Taxis", new {id=item.TaxiId })'"><i class="fas fa-pencil-alt"></i></button>
+                        <button type="button" class="btn btn-danger btn-sm px-3" onclick="location.href='@Url.Action("Delete", "Taxis", new {id=item.TaxiId })'"><i class="fas fa-times"></i></button>
                     </td>
                 </tr>
             }
@@ -58,52 +88,166 @@
     </table>
 
 
-    <!-- Modal -->
-    <div class="modal fade" id="myModal" role="dialog">
+    <!-- Add Modal -->
+    <div class="modal fade"
+         id="exampleModal"
+         tabindex="-1"
+         aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
         <div class="modal-dialog">
-
-            <!-- Modal content-->
             <div class="modal-content">
-                <div class="modal-header" style="padding:35px 50px;">
-                    <h3>Add Taxi</h3>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4><span class="glyphicon glyphicon-lock"></span> </h4>
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add Taxi</h5>
+                    <button type="button"
+                            class="btn-close"
+                            data-mdb-dismiss="modal"
+                            aria-label="Close"></button>
                 </div>
-                <div class="modal-body" style="padding:40px 50px;">
-                    <form asp-controller="Taxis" asp-action="Create">
+                <div class="modal-body">
+
+                    @* Add Model *@
+                    <form asp-controller="Taxis" asp-action="Create" method="post">
+                        @if (Model.NewTaxi.Error != "")
+                        {
+                            <div class="text-danger"> @Model.NewTaxi.Error</div>
+                        }
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <div class="form-group">
-                            <label asp-for="NewTaxi.Model" class="control-label"></label>
-                            <input asp-for="NewTaxi.Model" class="form-control" />
-                            <span asp-validation-for="NewTaxi.Model" class="text-danger"></span>
+                            @Html.LabelFor(x => Model.NewTaxi.MakeId)<br />
+                            @Html.DropDownListFor(x => Model.NewTaxi.MakeId, new SelectList(Model.Makes, "MakeId", "Make"))
+                            <span asp-validation-for="NewTaxi.MakeId" class="text-danger"></span>
                         </div>
                         <div class="form-group">
-                            <label asp-for="NewTaxi.Make" class="control-label"></label>
-                            <input asp-for="NewTaxi.Make" class="form-control" />
-                            <span asp-validation-for="NewTaxi.Make" class="text-danger"></span>
+                            @Html.LabelFor(x => Model.NewTaxi.ModelId)<br />
+                            @Html.DropDownListFor(x => Model.NewTaxi.ModelId, new SelectList(Model.Models, "ModelId", "Model"))
+
+                            <span asp-validation-for="NewTaxi.ModelId" class="text-danger"></span>
                         </div>
                         <div class="form-group">
                             <label asp-for="NewTaxi.Registration" class="control-label"></label>
-                            <input asp-for="NewTaxi.Registration" class="form-control" />
+                            <input asp-for="NewTaxi.Registration" class="form-control required" />
                             <span asp-validation-for="NewTaxi.Registration" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="NewTaxi.Comments" class="control-label"></label>
+                            <input asp-for="NewTaxi.Comments" class="form-control" />
+                            <span asp-validation-for="NewTaxi.Comments" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="NewTaxi.RegoExpiry" class="control-label"></label>
+                            <input asp-for="NewTaxi.RegoExpiry" class="form-control required" />
+                            <span asp-validation-for="NewTaxi.RegoExpiry" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="NewTaxi.IsWorking" class="control-label"></label>
+                            @Html.CheckBoxFor(model => model.NewTaxi.IsWorking)
+                            <span asp-validation-for="NewTaxi.IsWorking" class="text-danger"></span>
                         </div>
                         <div class="form-group">
                             <input type="submit" value="Add Taxi" class="btn btn-success" />
                         </div>
                     </form>
                 </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">
+                        Close
+                    </button>
+                </div>
             </div>
-
         </div>
     </div>
+
+
+    <!-- Edit Modal -->
+    @if (Model.DisplayEdit)
+    {
+        <div class="modal fade"
+             id="editModal"
+             tabindex="-1"
+             aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Edit Taxi</h5>
+                        <button type="button"
+                                class="btn-close"
+                                data-mdb-dismiss="modal"
+                                aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+
+                        <form asp-controller="Taxis" asp-action="Edit" method="post" >
+                            @if (Model.EditTaxi.Error != "")
+                            {
+                                <div class="text-danger"> @Model.EditTaxi.Error</div>
+                            }
+                            <input type="hidden" asp-for="EditTaxi.TaxiId" />
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="form-group">
+                                @Html.LabelFor(x => Model.EditTaxi.MakeId)<br />
+                                @Html.DropDownListFor(x => Model.EditTaxi.MakeId, new SelectList(Model.Makes, "MakeId", "Make"), new { style = "width: -webkit-fill-available;" })
+                                <span asp-validation-for="EditTaxi.MakeId" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(x => Model.EditTaxi.ModelId)<br />
+                                @Html.DropDownListFor(x => Model.EditTaxi.ModelId, new SelectList(Model.Models, "ModelId", "Model"), new { style = "width: -webkit-fill-available;" })
+                                <span asp-validation-for="EditTaxi.ModelId" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="EditTaxi.Registration" class="control-label"></label>
+                                <input asp-for="EditTaxi.Registration" value=@Model.EditTaxi.Registration class="form-control required" />
+                                <span asp-validation-for="EditTaxi.Registration" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="EditTaxi.Comments" class="control-label"></label>
+                                <input asp-for="EditTaxi.Comments" value=@Model.EditTaxi.Comments class="form-control" />
+                                <span asp-validation-for="EditTaxi.Comments" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="EditTaxi.RegoExpiry" class="control-label"></label>
+                                <input asp-for="EditTaxi.RegoExpiry" value=@Model.EditTaxi.RegoExpiry.ToString("yyyy-MM-dd\\THH:m") placeholder="Selected date" type="text" id="date-picker-example" class="form-control datepicker">
+                                <span asp-validation-for="EditTaxi.RegoExpiry" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="EditTaxi.IsWorking" class="control-label"></label>
+                                @Html.CheckBoxFor(model => model.EditTaxi.IsWorking)
+                                <span asp-validation-for="EditTaxi.IsWorking" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" value="Save" class="btn btn-success" />
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">
+                            Close
+                        </button>
+                      
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
 </div>
 
+
+
+
 <script>
-    $(document).ready(function () {
-        $("#openAdd").click(function () {
-            $("#myModal").modal("show");
-        });
+    $(document).ready(function() {
+        if ("@Model.DisplayEdit" == "True") {
+            $('#editModal').modal('show');
+        }
     });
 
+    setTimeout(function() {
+        var elem = document.getElementById("message");
+        elem.parentNode.removeChild(elem);
+    }, 30000);
 
 </script>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

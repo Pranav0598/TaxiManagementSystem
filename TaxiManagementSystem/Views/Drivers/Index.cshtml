@@ -11,33 +11,68 @@
         <div class="col-sm-8"><h3>Drivers</h3></div>
         <div class="col-sm-4">
             <!-- Trigger the modal with a button -->
-            <button type="button" class="btn btn-success  text-right" id="openAdd">Add Driver</button>
+            @* <button type="button" class="btn btn-success  text-right" id="openAdd">Add Driver</button>*@
         </div>
     </div>
+    @if (@Model.Status != null)
+    {
+        <div class="alert alert-success" role="alert">
+            @Model.Status
+        </div>
+    }
 
-    <table class="table">
+    @if (@Model.Error != null)
+    {
+        <div class="alert alert-danger" role="alert">
+            @Model.Error
+        </div>
+    }
+
+    <div class="row">
+        <form asp-controller="Drivers" asp-action="Search" style="display: contents;">
+            <div class="col-sm-6 p-2">
+                <input asp-for=@Model.searchModel.keyword class="form-control" />
+            </div>
+            <div class="col-sm-2 p-2"><button class="btn btn-primary" type="submit">Search Driver</button></div>
+            <div class="col-sm-2 p-2"> <button type="button" class="btn btn-success" data-mdb-toggle="modal" data-mdb-target="#addModal"> Add Driver</button></div>
+        </form>
+    </div>
+
+    <table class="table align-middle">
         <thead>
             <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.CurrentDrivers.FirstOrDefault().Name) 
+                    @Html.DisplayNameFor(model => model.AllDrivers.FirstOrDefault().Name)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.CurrentDrivers.FirstOrDefault().Phonenumber)
+                    @Html.DisplayNameFor(model => model.AllDrivers.FirstOrDefault().IsActive)
+                </th>
+                <th>
                 </th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model.CurrentDrivers)
+            @foreach (var item in Model.AllDrivers)
             {
+
                 <tr>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Name) 
+                        @Html.DisplayFor(modelItem => item.Name)
                     </td>
+
+                    @if (item.IsActive)
+                    {
+                        <td style="color: green">  <i class="fas fa-check"></i> </td>
+                    }
+                    else
+                    {
+                        <td style="color: red"> <i class="fas fa-times"></i> </td>
+                    }
+
                     <td>
-                        @Html.DisplayFor(modelItem => item.Phonenumber)
-                    </td>
-                    <td>
-                        <a asp-action="Delete" asp-route-id="@item.DriverId" style=" color:red;">Delete</a>
+                        <button type="button" class="btn btn-primary btn-sm px-3" onclick="location.href = '@Url.Action("Edit", "Drivers", new {id=item.DriverId })'"><i class="fas fa-pencil-alt"></i></button>
+                        <button type="button" class="btn btn-danger btn-sm px-3" onclick="location.href='@Url.Action("Delete", "Drivers", new {id=item.DriverId })'"><i class="fas fa-times"></i></button>
+                        <button type="button" class="btn btn-warning btn-sm px-3" onclick="location.href = '@Url.Action("ResetDriverPwd", "Drivers", new {driverId= item.DriverId })'">Reset Password</button>
                     </td>
                 </tr>
             }
@@ -45,39 +80,150 @@
     </table>
 
 
+
+
     <!-- Modal -->
-    <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal fade"
+         id="myModal"
+         tabindex="-1"
+         aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
         <div class="modal-dialog">
-
-            <!-- Modal content-->
             <div class="modal-content">
-                <div class="modal-header" style="padding:35px 50px;">
-                    <h3>Add Driver</h3>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>                    
-                    <h4><span class="glyphicon glyphicon-lock"></span> </h4>
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Edit Driver</h5>
+                    <button type="button"
+                            class="btn-close"
+                            data-mdb-dismiss="modal"
+                            aria-label="Close"></button>
                 </div>
-                <div class="modal-body" style="padding:40px 50px;">
-                    <form asp-controller="Owners" asp-action="AddDriver">
-                        @Html.LabelFor(x => Model.SelectedDriver)<br />
-                        @Html.DropDownListFor(x => Model.SelectedDriver, new SelectList(Model.AllDrivers, "DriverId", "Name"))
-                        <br /><br />
-                        <div class="form-group">
-                            <input type="submit" value="Add Driver" class="btn btn-success" />
+                <form asp-controller="Drivers" asp-action="SaveDriver">
+                    <div class="modal-body">
+                        <input type="hidden" asp-for=@Model.EditDriver.DriverId />
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group mb-4">
+                            <label asp-for=@Model.EditDriver.LastName class="control-label"></label>
+                            <input asp-for=@Model.EditDriver.LastName class="form-control" />
+                            <span asp-validation-for=@Model.EditDriver.LastName class="text-danger"></span>
                         </div>
-                    </form>
-                </div>                
+                        <div class="form-group mb-4">
+                            <label asp-for=@Model.EditDriver.FirstName class="control-label"></label>
+                            <input asp-for=@Model.EditDriver.FirstName class="form-control" />
+                            <span asp-validation-for=@Model.EditDriver.FirstName class="text-danger"></span>
+                        </div>
+                        <div class="form-group mb-4">
+                            <label asp-for=@Model.EditDriver.Age class="control-label"></label>
+                            <input asp-for=@Model.EditDriver.Age class="form-control" />
+                            <span asp-validation-for=@Model.EditDriver.Age class="text-danger"></span>
+                        </div>
+                        <div class="form-group mb-4">
+                            <label asp-for=@Model.EditDriver.DriversLicense class="control-label"></label>
+                            <input asp-for=@Model.EditDriver.DriversLicense class="form-control" />
+                            <span asp-validation-for=@Model.EditDriver.DriversLicense class="text-danger"></span>
+                        </div>
+                        <div class="form-group mb-4">
+                            <label asp-for=@Model.EditDriver.PhoneNumber class="control-label"></label>
+                            <input asp-for=@Model.EditDriver.PhoneNumber class="form-control" />
+                            <span asp-validation-for=@Model.EditDriver.PhoneNumber class="text-danger"></span>
+                        </div>
+                        <div class="form-group mb-4">
+                            <label asp-for=@Model.EditDriver.Email class="control-label"></label>
+                            <input asp-for=@Model.EditDriver.Email class="form-control" />
+                            <span asp-validation-for=@Model.EditDriver.Email class="text-danger"></span>
+                        </div>
+                        <div class="form-group mb-4">
+                            <label asp-for=@Model.EditDriver.IsActive class="control-label"></label><br>
+                            <input asp-for=@Model.EditDriver.IsActive type="checkbox" class="form-check-input" />
+                            <span asp-validation-for=@Model.EditDriver.IsActive class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="form-group mb-4">
+                            <input type="submit" value="Save Driver" class="btn btn-success" />
+                        </div>
+                    </div>
+                </form>
             </div>
-
         </div>
     </div>
 </div>
 
+
+<!-- Modal -->
+<div class="modal fade"
+     id="addModal"
+     tabindex="-1"
+     aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="exampleModalLabel">Add Driver</h3>
+            </div>
+            <form asp-controller="Drivers" asp-action="AddDriver">
+                <div class="modal-body">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group mb-4">
+                        <div class="form-group mb-4">
+                            <label asp-for=@Model.AddDriver.UserName class="control-label"></label>
+                            <input asp-for=@Model.AddDriver.UserName class="form-control" required />
+                            <span asp-validation-for=@Model.AddDriver.UserName class="text-danger"></span>
+                        </div>
+                        <label asp-for=@Model.AddDriver.LastName class="control-label"></label>
+                        <input asp-for=@Model.AddDriver.LastName class="form-control" required/>
+                        <span asp-validation-for=@Model.AddDriver.LastName class="text-danger"></span>
+                    </div>
+                    <div class="form-group mb-4">
+                        <label asp-for=@Model.AddDriver.FirstName class="control-label"></label>
+                        <input asp-for=@Model.AddDriver.FirstName class="form-control" required />
+                        <span asp-validation-for=@Model.AddDriver.FirstName class="text-danger"></span>
+                    </div>
+                    <div class="form-group mb-4">
+                        <label asp-for=@Model.AddDriver.Age class="control-label"></label>
+                        <input asp-for=@Model.AddDriver.Age class="form-control" required />
+                        <span asp-validation-for=@Model.AddDriver.Age class="text-danger"></span>
+                    </div>
+                    <div class="form-group mb-4">
+                        <label asp-for=@Model.AddDriver.DriversLicense class="control-label"></label>
+                        <input asp-for=@Model.AddDriver.DriversLicense class="form-control" required />
+                        <span asp-validation-for=@Model.AddDriver.DriversLicense class="text-danger"></span>
+                    </div>
+                    <div class="form-group mb-4">
+                        <label asp-for=@Model.AddDriver.PhoneNumber class="control-label"></label>
+                        <input asp-for=@Model.AddDriver.PhoneNumber class="form-control" required />
+                        <span asp-validation-for=@Model.AddDriver.PhoneNumber class="text-danger"></span>
+                    </div>
+                    <div class="form-group mb-4">
+                        <label asp-for=@Model.AddDriver.Email class="control-label"></label>
+                        <input asp-for=@Model.AddDriver.Email class="form-control" required />
+                        <span asp-validation-for=@Model.AddDriver.Email class="text-danger"></span>
+                    </div>
+                   
+                </div>
+                <div class="modal-footer">
+                    <div class="form-group mb-4">
+                        <input type="submit" value="Add Driver" class="btn btn-success" />
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
+</div>
+
+
+
+
 <script>
     $(document).ready(function () {
-        $("#openAdd").click(function () {
+        if ("@Model.DisplayEdit" == "True") {
             $("#myModal").modal("show");
-        });
+        }
+
+        setTimeout(function() {
+            var elem = document.getElementById("message");
+            elem.parentNode.removeChild(elem);
+        }, 30000);
     });
 
 
