@@ -1,0 +1,155 @@
+﻿@model TaxiManagementSystem.Models.EarningsViewModel
+
+
+@{
+    ViewData["Title"] = "My Earnings";
+    Layout = "~/Views/Shared/_OwnerLayout.cshtml";
+}
+<div id="Container">
+    <div class=" row right ">
+        <div class="col-sm-8"><h3>Owner's Income</h3></div>
+        <div class="col-sm-4">
+         
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <form asp-controller="Earnings" asp-action="GetOwnersEarnings" style="display: contents;">
+            <div class="col-sm-6 p-2">
+                <input type="hidden" asp-for="UserId" value=@Model.UserId />
+                <input type="hidden" asp-for="UserId" value=@Model.DriverId />
+                <input type="hidden" asp-for="UserId" value=@Model.TaxiId />
+                <input asp-for="Search" class="form-control" />
+            </div>
+            <div class="col-sm-2 p-2">
+                <input asp-for="SearchDate" class="form-control" >
+            </div>
+            <div class="col-sm-2 p-2">
+                @Html.CheckBoxFor(model => model.IncludeDateSearch)
+                <label class="form-check-label" for="IncludeDateSearch">
+                    Include date
+                </label>
+            </div>
+            <div class="col-sm-2 p-2"><button class="btn btn-primary" type="submit">Get earnings</button></div>
+        </form>
+    </div>
+    <div class ="row">       
+        <form asp-controller="Earnings" asp-action="Export" style="display: contents;">
+            <div class="col-sm-8 p-2"> </div>
+             
+                <div class="col-sm-2 p-2"><button class= "btn btn-secondary" type="submit">Export</button></div>
+        </form>
+    </div>
+
+    <br>
+
+    <div class="row">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Date
+                    </th>
+                    <th>
+                        Driver
+                    </th>
+                    <th>
+                        Vehicle
+                    </th>
+                    <th>
+                        Earnings
+                    </th>
+                    <th>
+                        Expenditure
+                    </th>
+                    <th>
+                        Income Earned
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Earnings)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ShiftDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Driver.FirstName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Taxi.Registration)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Earning)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Expenditure)
+                        </td>
+                        <td>
+
+                            @Html.DisplayFor(modelItem => item.IncomeEarned)
+                        </td>
+                       
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+
+@if (Model.Earnings.Any())
+{
+    <div class="container">
+        <div class="row rounded" style="    bottom: 100px;     width:100%;">
+            <div class="col-sm-9"></div>
+            <div class="col-sm-3"><b>Total earnings : @Model.WeeklyEarnings</b></div>
+       
+        </div>
+    </div>
+
+}
+<br><br>
+<div id="chartContainer" style="height: 400px; width: 100%;"></div>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+<script>
+    window.onload = function () {
+
+        var chart = new CanvasJS.Chart("chartContainer", {
+            animationEnabled: true,
+            title: {
+                text: "Income for 2021"
+            },
+            toolTip: {
+                shared: true
+            },
+            axisY: {
+                prefix: "$",
+                title: "Income in (AUD)"
+            },
+            data: [{
+                type: "line",
+                name: "Income (AUD)",
+                showInLegend: true,
+                yValueFormatString: "$#,##0.00",
+                dataPoints: @Html.Raw(ViewBag.DataPoints1)
+            }]
+        });
+        chart.render();
+
+    }
+</script>
+
+
+<script>
+    $(document).ready(function () {
+        $("#openAdd").click(function () {
+            $("#myModal").modal("show");
+        });
+    });
+
+
+</script>
+
