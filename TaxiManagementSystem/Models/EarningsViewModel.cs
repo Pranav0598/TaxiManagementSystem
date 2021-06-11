@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace TaxiManagementSystem.Models
 {
-    public class EarningsViewModel : BaseViewModel
+    public class EarningsViewModel
     {
         [Required]
         [Column(TypeName = "date")]
@@ -24,7 +24,8 @@ namespace TaxiManagementSystem.Models
         public double WeeklyEarnings { get; set; }
         public double MonthlyEarnings { get; set; }
         public DateTime EarningsOn { get; set; }
-
-
+        
+        public string Error { get; set; }
+        
     }
 }
