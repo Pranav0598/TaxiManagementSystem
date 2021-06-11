@@ -9259,11 +9259,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\prana\\OneDrive - Federation University Australia\\Documents\\TaxiManagementSystem\\TaxiManagementSystem\\TaxiManagementSystem.csproj",
+      "projectUniqueName": "C:\\Users\\prana\\OneDrive - Federation University Australia\\Documents\\TaxiManagementSystem\\LATEST\\TaxiManagementSystem\\TaxiManagementSystem.csproj",
       "projectName": "TaxiManagementSystem",
-      "projectPath": "C:\\Users\\prana\\OneDrive - Federation University Australia\\Documents\\TaxiManagementSystem\\TaxiManagementSystem\\TaxiManagementSystem.csproj",
+      "projectPath": "C:\\Users\\prana\\OneDrive - Federation University Australia\\Documents\\TaxiManagementSystem\\LATEST\\TaxiManagementSystem\\TaxiManagementSystem.csproj",
       "packagesPath": "C:\\Users\\prana\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\prana\\OneDrive - Federation University Australia\\Documents\\TaxiManagementSystem\\TaxiManagementSystem\\obj\\",
+      "outputPath": "C:\\Users\\prana\\OneDrive - Federation University Australia\\Documents\\TaxiManagementSystem\\LATEST\\TaxiManagementSystem\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\prana\\AppData\\Roaming\\NuGet\\NuGet.Config",
