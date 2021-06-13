@@ -150,7 +150,7 @@ namespace TaxiManagementSystem.Controllers
             vm.LastName = user.LastName;
             vm.UserName = user?.UserName;
 
-            return View("MyAccount", vm);
+            return View("OwnerAccount", vm);
         }
 
 

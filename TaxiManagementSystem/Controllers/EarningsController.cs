@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using ClosedXML.Excel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
@@ -50,7 +51,7 @@ namespace TaxiManagementSystem.Controllers
             earning.DriverId = driver.DriverId;
             earning = GetEarnings(earning);
             earning.IsActive =
-                _context.OwnerDriver.Any(x => x.DriverId == driver.DriverId && x.IsActiveDriver != false);
+                _context.Driver.Any(x => x.DriverId == driver.DriverId && x.IsActive != false);
             earning.AllSchedules = _context.Schedule.Include(c => c.Taxi).Where(x => x.DriverId == driver.DriverId)
                 .ToList();
             earning.AllTaxis = earning.AllSchedules.Select(x => x.Taxi).ToList();
@@ -210,7 +211,7 @@ namespace TaxiManagementSystem.Controllers
             var firstDayOfMonth = new DateTime(earning.EarningsOn.Year, earning.EarningsOn.Month, 1);
             var lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
             earning.MonthlyEarnings = _context.Earnings
-                .Where(e => e.ShiftDate >= firstDayOfMonth && e.ShiftDate <= lastDayOfMonth)
+                .Where(e => e.ShiftDate >= firstDayOfMonth && e.ShiftDate <= lastDayOfMonth && e.DriverId == earning.DriverId)
                 .Select(x => x.IncomeEarned ?? 0).Sum();
             return earning;
         }
@@ -358,48 +359,23 @@ namespace TaxiManagementSystem.Controllers
             earning.UserId = int.Parse(userId);
 
             //graph data
-            var earnings = _context.Earnings.ToList();
+            var earnings = _context.Earnings.Include(x=>x.Driver).ToList();
 
             var a = earnings?.Where(x => x.ShiftDate.Month == 1).Sum(x => x.IncomeEarned) ?? 0;
 
+            var list = from e in earnings
+                group e by e.Driver
+                into g
+                select new {Name = g.Key.FirstName + " " + g.Key.LastName, earnings = g.Sum(c => c.Earning)};
+                    
+            
+
             var dataPoints1 = new List<DataPoint>();
 
-            dataPoints1.Add(new DataPoint("Jan",
-                earnings?.Where(x => x.ShiftDate.Month == 1 && x.ShiftDate.Year == DateTime.Now.Year)
-                    .Sum(x => x.IncomeEarned) ?? 0));
-            dataPoints1.Add(new DataPoint("Feb",
-                earnings?.Where(x => x.ShiftDate.Month == 2 && x.ShiftDate.Year == DateTime.Now.Year)
-                    .Sum(x => x.IncomeEarned) ?? 0));
-            dataPoints1.Add(new DataPoint("Mar",
-                earnings?.Where(x => x.ShiftDate.Month == 3 && x.ShiftDate.Year == DateTime.Now.Year)
-                    .Sum(x => x.IncomeEarned) ?? 0));
-            dataPoints1.Add(new DataPoint("Apr",
-                earnings?.Where(x => x.ShiftDate.Month == 4 && x.ShiftDate.Year == DateTime.Now.Year)
-                    .Sum(x => x.IncomeEarned) ?? 0));
-            dataPoints1.Add(new DataPoint("May",
-                earnings?.Where(x => x.ShiftDate.Month == 5 && x.ShiftDate.Year == DateTime.Now.Year)
-                    .Sum(x => x.IncomeEarned) ?? 0));
-            dataPoints1.Add(new DataPoint("Jun",
-                earnings?.Where(x => x.ShiftDate.Month == 6 && x.ShiftDate.Year == DateTime.Now.Year)
-                    .Sum(x => x.IncomeEarned) ?? 0));
-            dataPoints1.Add(new DataPoint("Jul",
-                earnings?.Where(x => x.ShiftDate.Month == 7 && x.ShiftDate.Year == DateTime.Now.Year)
-                    .Sum(x => x.IncomeEarned) ?? 0));
-            dataPoints1.Add(new DataPoint("Aug",
-                earnings?.Where(x => x.ShiftDate.Month == 8 && x.ShiftDate.Year == DateTime.Now.Year)
-                    .Sum(x => x.IncomeEarned) ?? 0));
-            dataPoints1.Add(new DataPoint("Sep",
-                earnings?.Where(x => x.ShiftDate.Month == 9 && x.ShiftDate.Year == DateTime.Now.Year)
-                    .Sum(x => x.IncomeEarned) ?? 0));
-            dataPoints1.Add(new DataPoint("Oct",
-                earnings?.Where(x => x.ShiftDate.Month == 10 && x.ShiftDate.Year == DateTime.Now.Year)
-                    .Sum(x => x.IncomeEarned) ?? 0));
-            dataPoints1.Add(new DataPoint("Nov",
-                earnings?.Where(x => x.ShiftDate.Month == 11 && x.ShiftDate.Year == DateTime.Now.Year)
-                    .Sum(x => x.IncomeEarned) ?? 0));
-            dataPoints1.Add(new DataPoint("Dec",
-                earnings?.Where(x => x.ShiftDate.Month == 12 && x.ShiftDate.Year == DateTime.Now.Year)
-                    .Sum(x => x.IncomeEarned) ?? 0));
+            foreach (var e in list)
+            {
+                dataPoints1.Add(new DataPoint(e.Name,e?.earnings??0));
+            }
 
 
             ViewBag.DataPoints1 = JsonConvert.SerializeObject(dataPoints1);

@@ -58,8 +58,7 @@ namespace TaxiManagementSystem.Controllers
             {
                 model.EditTaxi = model.EditTaxi;
             }
-
-
+            
             return View(model);
         }
 
@@ -98,7 +97,7 @@ namespace TaxiManagementSystem.Controllers
             {
                 taxiViewModel.NewTaxi.IsWorking = true;
 
-                var taxi = MapTaxiViewModelToTaxi(taxiViewModel.NewTaxi);
+                var taxi = MapTaxiViewModelToTaxi(taxiViewModel.NewTaxi, new Taxi());
                 var currentTaxi = _context.Taxi.FirstOrDefault(x=>x.Registration == taxiViewModel.NewTaxi.Registration);
                 taxiViewModel.DisplayEdit = false;
                 taxiViewModel.SearchModel = new SearchViewModel();
@@ -193,13 +192,32 @@ namespace TaxiManagementSystem.Controllers
                 return NotFound();
             }
 
+            IEnumerable<Taxi> allTaxi = _context.Taxi.Include(x => x.MakeNavigation).Include(y => y.ModelNavigation).ToList();
+            
+            var allTaxis = new List<TaxiViewModel>();
+
+            foreach (var taxi in allTaxi)
+            {
+                var viewModel = MapToTaxiViewModel(taxi);
+                allTaxis.Add(viewModel);
+            }
+
+            taxiViewModel.Taxis = allTaxis;
+            taxiViewModel.DisplayEdit = false;
+            taxiViewModel.SearchModel = new SearchViewModel();
+            taxiViewModel.Makes = _context.CarMake.ToList();
+            taxiViewModel.Models = _context.CarModel.ToList();
+            taxiViewModel.NewTaxi = new TaxiViewModel();
+
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var taxi = MapTaxiViewModelToTaxi(taxiViewModel.EditTaxi);
-                    var currentTaxi = _context.Taxi.FirstOrDefault(x => x.Registration == taxiViewModel.EditTaxi.Registration);
-                    if (currentTaxi != null)
+                    var currentTaxi = _context.Taxi.FirstOrDefault(x=>x.TaxiId == taxiViewModel.EditTaxi.TaxiId);
+
+                    var taxi = MapTaxiViewModelToTaxi(taxiViewModel.EditTaxi, currentTaxi);
+                    var regoExists = allTaxis.Any(x=>x.Registration == taxiViewModel.EditTaxi.Registration);
+                    if (regoExists && currentTaxi.Registration != taxiViewModel.EditTaxi.Registration)
                     {
                         taxiViewModel.EditTaxi = new TaxiViewModel();
                         taxiViewModel.Error = "The taxi with registration" + currentTaxi.Registration + " already exists.";
@@ -221,6 +239,7 @@ namespace TaxiManagementSystem.Controllers
                     }
                 }
                 taxiViewModel.EditTaxi = new TaxiViewModel();
+
                 return RedirectToAction(nameof(Index));
             }
             return RedirectToAction("Index", "Taxis", taxiViewModel);
@@ -269,10 +288,8 @@ namespace TaxiManagementSystem.Controllers
         }
 
 
-        private Taxi MapTaxiViewModelToTaxi(TaxiViewModel taxi)
+        private Taxi MapTaxiViewModelToTaxi(TaxiViewModel taxi ,Taxi model)
         {
-            Taxi model = new Taxi();
-            model.TaxiId = taxi.TaxiId;
             model.Model = taxi.ModelId;
             model.Make = taxi.MakeId;
             model.Registration = taxi.Registration;

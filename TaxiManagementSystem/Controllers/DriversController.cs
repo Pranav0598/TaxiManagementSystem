@@ -45,10 +45,7 @@ namespace TaxiManagementSystem.Controllers
 
             IEnumerable<DriverViewModel> allDrivers = GetAllDrivers();
             IEnumerable<DriverViewModel> drivers = GetDrivers(owner.OwnerId);
-            foreach (var d in allDrivers)
-            {
-                d.IsActive = drivers.FirstOrDefault(x => d.DriverId == x.DriverId)?.IsActive ?? false;
-            }
+          
             OwnerDriversViewModel model = new OwnerDriversViewModel();
             model.AllDrivers = allDrivers;
             model.CurrentDrivers = drivers;
@@ -260,37 +257,7 @@ namespace TaxiManagementSystem.Controllers
 
             _context.Update(upadteDriver);
             _context.SaveChanges();
-
-            if (existsInOD == owner.EditDriver.IsActive)
-            {
-                    return RedirectToAction("Index", "Drivers");
-            }
-
-            if (existsInOD && owner.EditDriver.IsActive == false)
-            {
-                //remove
-                var ownerDriver = new OwnerDriver
-                {
-                    OwnerId = currentOwner.OwnerId,
-                    DriverId = owner.EditDriver.DriverId
-                };
-
-                _context.OwnerDriver.Remove(ownerDriver);
-                _context.SaveChanges();
-            }
-
-            if (!existsInOD && owner.EditDriver.IsActive == true)
-            {
-                var ownerDriver = new OwnerDriver
-                {
-                    OwnerId = currentOwner.OwnerId,
-                    DriverId = owner.EditDriver.DriverId
-                };
-
-                _context.OwnerDriver.Add(ownerDriver);
-                _context.SaveChanges();
-            }
-
+            
             return RedirectToAction("Index", "Drivers");
         }
 
